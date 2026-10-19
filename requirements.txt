@@ -1,6 +1,7 @@
-pandas 
+pandas
 numpy
 scikit-learn
 streamlit
 anthropic
 python-dotenv
+openpyxl
