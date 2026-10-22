@@ -241,7 +241,29 @@ The rules engine scores 100% on routing because the client's tickets follow fixe
 
 **Mac run** (`configs/mac.yaml`: Qwen2.5-0.5B-Instruct, r=8, 1 epoch, 30 optimizer steps):
 
-<!-- RESULTS:MAC -->
+Measured on Oct 22, 2026. *Unseen alerts* means 27 Dynatrace problems whose alert types (CPU saturation, DB pool exhaustion, GC pause, memory 96%) were held out of training.
+
+| Model | Valid JSON (unseen alerts) | Right remedy branch (unseen alerts) | Names the alert (unseen alerts) | Grounded steps (unseen alerts) | ROUGE-L (held-out tickets) |
+|---|---|---|---|---|---|
+| Base Qwen2.5-0.5B | 93% | 31% | 0.38 | 0.73 | 0.29 |
+| v1 LoRA, tickets only (30 steps, 3.8 min) | 100% | **0%** | **0.23** | 1.00 | **1.00** |
+| v2 LoRA, tickets + alert examples | *pending: run `train_lora.py`, then `compare_models.py`* | | | | |
+
+**What v1 taught us (a failure worth reporting).** Trained only on the client's tickets, the adapter scored perfectly on held-out tickets and got *worse than the base model* on real alerts. It learned to recite the precedent ticket whatever the alert said: a disk-space alert got the GC/CPU story, and an authentication failure got a database-patch rollback. Every word was grounded in a real ticket, so the grounding check passed it. This is the "context collapse" failure from the team's research, reproduced. Three fixes followed:
+
+1. **An alert-consistency guardrail.** The summary must name the alert that fired, or the card falls back to the rules draft. It applies to every backend.
+2. **Precedent labels.** Precedents are tagged *matches this alert* or *same event type · different cause*, the prompt says so, and the rules draft only cites matching ones.
+3. **Training data v2.** Alert-derived examples were added, and whole alert types are held out of training, so evaluation measures generalization instead of memorization.
+
+To reproduce:
+
+```bash
+uv run --all-extras python src/sft_data.py
+caffeinate -i uv run --all-extras python src/train_lora.py --config configs/mac.yaml
+uv run --all-extras python src/compare_models.py models/lora-mac-v1 models/lora-mac
+```
+
+Keep the laptop awake and plugged in (`caffeinate -i`). A closed lid suspends training, and heavy memory pressure (many browser tabs) slows MPS training by 10× or more.
 
 **Scaling up on the cluster.** The same script runs on any CUDA GPU. [`configs/cluster.yaml`](configs/cluster.yaml) moves to Qwen2.5-3B in bf16 with LoRA on all projection layers. [`configs/sweep.yaml`](configs/sweep.yaml) is a 72-run grid over model size (0.5B to 7B), learning rate, LoRA rank, and epochs.
 
