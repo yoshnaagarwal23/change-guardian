@@ -1,0 +1,14 @@
+# Hyperparameter grid for the cluster. sweep.py expands it into one run per combination.
+# 4 models x 3 learning rates x 3 ranks x 2 epoch counts = 72 runs (one SLURM array task each).
+base: cluster.yaml
+grid:
+  model_id:
+    - Qwen/Qwen2.5-0.5B-Instruct
+    - Qwen/Qwen2.5-1.5B-Instruct
+    - Qwen/Qwen2.5-3B-Instruct
+    - Qwen/Qwen2.5-7B-Instruct
+  learning_rate: [5.0e-5, 1.0e-4, 2.0e-4]
+  lora.r: [8, 16, 32]
+  epochs: [2, 3]
+# Rank runs by this metric from metrics.json -> adapter.
+objective: grounding

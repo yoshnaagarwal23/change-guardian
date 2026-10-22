@@ -1,0 +1,24 @@
+# Small, fast run for an Apple Silicon laptop (M1 Pro, 32 GB). ~0.5B params, LoRA on attention.
+# Goal: prove the pipeline and see if fine-tuning beats the base model before using the cluster.
+model_id: Qwen/Qwen2.5-0.5B-Instruct
+precision: fp32          # MPS training is most stable in fp32 at this size
+lora:
+  r: 8
+  alpha: 16
+  dropout: 0.05
+  target_modules: [q_proj, k_proj, v_proj, o_proj]
+learning_rate: 2.0e-4
+weight_decay: 0.0
+warmup_ratio: 0.05
+epochs: 1
+batch_size: 2
+grad_accum: 4
+max_len: 1024
+max_new_tokens: 256
+eval_samples: 20
+holdout_frac: 0.2
+seed: 42
+log_every: 5
+output_dir: models/lora-mac
+mlflow: true
+experiment: change-guardian-lora

@@ -1,0 +1,15 @@
+# University GPU cluster run. Inherits everything from mac.yaml, then overrides.
+base: mac.yaml
+model_id: Qwen/Qwen2.5-3B-Instruct
+precision: bf16
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]
+learning_rate: 1.0e-4
+epochs: 3
+batch_size: 8
+grad_accum: 2
+eval_samples: 60
+output_dir: models/lora-cluster

@@ -13,6 +13,7 @@ import pandas as pd
 
 RAW = Path("data/raw")
 OUT = Path("data/processed")
+SOPS = Path("data/sops")
 
 # SEV-1 is the most severe. Used to pick the "highest" severity in a problem.
 SEVERITY_RANK = {"SEV-1": 1, "SEV-2": 2, "SEV-3": 3, "SEV-4": 4, "SEV-5": 5}
@@ -26,14 +27,16 @@ SEVERITY_TO_PRIORITY = {
     "SEV-5": "Low",  # not in tickets; assumed
 }
 
-# Which SOP covers which event type. None = no SOP yet (Andrew is writing these).
+# Which SOP covers which event type. None = no SOP yet.
+# SOP-005 (Synthetic & RUM) is user-experience monitoring, not OneAgent/ActiveGate
+# connectivity, so "Monitoring Unavailable" stays uncovered until Andrew writes one.
 EVENT_TO_SOP = {
     "Availability": "SOP-001",
     "Slowdown": "SOP-002",
     "Error": "SOP-003",
-    "Resource": None,
+    "Resource": "SOP-004",
     "Monitoring Unavailable": None,
-    "Custom Alert": None,
+    "Custom Alert": "SOP-006",
 }
 
 
@@ -105,12 +108,12 @@ def split_sops(md_path: Path) -> None:
     """Split the SOP markdown (converted from the .docx) into one file per SOP."""
     text = md_path.read_text()
     parts = re.split(r"(?m)^# (?=SOP-\d+)", text)
-    Path("sops").mkdir(exist_ok=True)
+    SOPS.mkdir(parents=True, exist_ok=True)
     for part in parts:
         if not part.strip().startswith("SOP-"):
             continue
         sop_id = part.split(":")[0].strip()
-        (Path("sops") / f"{sop_id}.md").write_text("# " + part.strip() + "\n")
+        (SOPS / f"{sop_id}.md").write_text("# " + part.strip() + "\n")
 
 
 if __name__ == "__main__":
