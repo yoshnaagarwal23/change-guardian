@@ -35,6 +35,13 @@ def test_rank_remedies_picks_the_branch_that_matches_the_diagnosis(tools):
     assert cpu[0][0].name == "Resource Reallocation"
 
 
+def test_rank_steps_puts_the_relevant_diagnostic_step_first(tools):
+    from knowledge import rank_texts
+    sop = tools.find_sop("Resource")
+    best = rank_texts(sop.diagnostic_steps, "Disk space capacity remaining less than 5% on /var/log.")[0][0]
+    assert "Disk IOPS" in best
+
+
 def test_similar_tickets_are_deduplicated_precedents_of_the_same_event_type(tools):
     hits = tools.find_similar_tickets("Process crashed due to out-of-memory exception.", "Availability")
     assert hits, "expected at least one precedent"

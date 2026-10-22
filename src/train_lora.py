@@ -75,9 +75,17 @@ def batches(rows: list[dict], size: int, pad_id: int, torch, seed: int):
         yield (torch.tensor(ids), torch.tensor(labels), torch.tensor(mask))
 
 
+def eval_set(test_rows: list[dict], cfg: dict) -> list[dict]:
+    """All held-out alert types (the generalization test) + a sample of held-out tickets."""
+    alerts = [r for r in test_rows if r.get("kind") == "alert"]
+    tickets = [r for r in test_rows if r.get("kind", "ticket") == "ticket"]
+    return alerts[: cfg.get("eval_alerts", len(alerts))] + tickets[: cfg.get("eval_samples", len(tickets))]
+
+
 def evaluate_model(model, tokenizer, examples: list[dict], device: str, torch, max_new_tokens: int) -> dict:
+    """Flat metrics per example kind, e.g. alert_consistency, ticket_rouge_l."""
     model.eval()
-    scores = []
+    by_kind: dict[str, list[dict]] = {}
     for ex in examples:
         prompt = tokenizer.apply_chat_template(ex["messages"][:-1], tokenize=False, add_generation_prompt=True)
         inputs = tokenizer(prompt, return_tensors="pt").to(device)
@@ -85,8 +93,26 @@ def evaluate_model(model, tokenizer, examples: list[dict], device: str, torch, m
             out = model.generate(**inputs, max_new_tokens=max_new_tokens, do_sample=False,
                                  pad_token_id=tokenizer.eos_token_id)
         text = tokenizer.decode(out[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
-        scores.append(score_generation(text, ex["gold"], ex["sources"]))
-    return summarize(scores)
+        by_kind.setdefault(ex.get("kind", "ticket"), []).append(
+            score_generation(text, ex["gold"], ex["sources"], ex.get("diagnosis"), ex.get("key_step")))
+    return {f"{kind}_{k}": v for kind, scores in by_kind.items()
+            for k, v in summarize(scores).items() if v is not None}
+
+
+def evaluate_adapter(cfg: dict, adapter: str | None) -> dict:
+    """Score an existing adapter (or the base model when adapter is None) without training."""
+    import torch
+    from peft import PeftModel
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+
+    device = cfg.get("device") or pick_device(torch)
+    tokenizer = AutoTokenizer.from_pretrained(cfg["model_id"])
+    model = AutoModelForCausalLM.from_pretrained(cfg["model_id"]).to(device)
+    if adapter:
+        model = PeftModel.from_pretrained(model, adapter).to(device)
+    _, test_rows = load_splits(cfg)
+    return evaluate_model(model, tokenizer, eval_set(test_rows, cfg), device, torch,
+                          cfg.get("max_new_tokens", 256))
 
 
 def train(cfg: dict, max_steps: int | None = None, eval_base: bool = False) -> dict:
@@ -106,7 +132,7 @@ def train(cfg: dict, max_steps: int | None = None, eval_base: bool = False) -> d
     model = AutoModelForCausalLM.from_pretrained(cfg["model_id"], dtype=dtype).to(device)
 
     train_rows, test_rows = load_splits(cfg)
-    eval_rows = test_rows[: cfg.get("eval_samples", len(test_rows))]
+    eval_rows = eval_set(test_rows, cfg)
     results: dict = {"config": cfg, "device": device}
 
     if eval_base:
@@ -191,10 +217,15 @@ def main() -> None:
     parser.add_argument("--max-steps", type=int, help="stop early (smoke test)")
     parser.add_argument("--eval-base", action="store_true", help="also score the untuned model")
     parser.add_argument("--output-dir", help="override output_dir")
+    parser.add_argument("--eval-only", metavar="ADAPTER", nargs="?", const="",
+                        help="score an existing adapter (or the base model if no path) and exit")
     args = parser.parse_args()
     cfg = load_config(args.config)
     if args.output_dir:
         cfg["output_dir"] = args.output_dir
+    if args.eval_only is not None:
+        print(json.dumps(evaluate_adapter(cfg, args.eval_only or None), indent=2))
+        return
     train(cfg, args.max_steps, args.eval_base)
 
 

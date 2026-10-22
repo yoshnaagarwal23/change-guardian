@@ -35,12 +35,12 @@ def expand(sweep_path: Path) -> list[dict]:
             else:
                 cfg[key] = value
         cfg["output_dir"] = str(SWEEP_DIR / f"run-{i:03d}")
-        cfg["objective"] = spec.get("objective", "grounding")
+        cfg["objective"] = spec.get("objective", "alert_branch_hit_rate")
         runs.append(cfg)
     return runs
 
 
-def collect(objective: str = "grounding") -> Path:
+def collect(objective: str = "alert_branch_hit_rate") -> Path:
     import pandas as pd
 
     rows = []

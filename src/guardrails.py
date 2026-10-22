@@ -18,7 +18,9 @@ _CHANGE = (r"restart|roll ?back|rollback|reboot|\bkill\b|scale|scaling|increase|
            r"disable|failover|expand|expansion|purge|delete|patch")
 _NON_PROD = r"stag|\bdev\b|-dev|test|sandbox|nonprod|non-prod|qa\b"
 _STOP = {"the", "a", "an", "and", "or", "to", "of", "in", "on", "for", "with", "if", "any",
-         "is", "are", "be", "by", "from", "via", "at", "as", "it", "this", "that", "into"}
+         "is", "are", "be", "by", "from", "via", "at", "as", "it", "this", "that", "into",
+         "less", "than", "more", "has", "have", "was", "were", "due"}
+CONSISTENCY_MIN = 0.3
 
 
 def classify_step(step: str) -> str:
@@ -56,6 +58,15 @@ def grounding_score(step: str, sources: list[str]) -> float:
         return 0.0
     vocab = {w.strip(".,") for s in sources for w in _words(s)}
     return len(words & vocab) / len(words)
+
+
+def alert_consistency(summary: str, diagnosis: str) -> float:
+    """Share of the firing alert's content words that the summary mentions.
+
+    Grounding alone can't catch a model that recites a real but unrelated precedent
+    (every word is "grounded"). This checks the answer is about the alert that fired.
+    """
+    return grounding_score(diagnosis, [summary])
 
 
 class AuditLog:

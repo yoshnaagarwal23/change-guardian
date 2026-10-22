@@ -15,7 +15,8 @@ batch_size: 2
 grad_accum: 4
 max_len: 1024
 max_new_tokens: 256
-eval_samples: 20
+eval_samples: 20         # held-out tickets scored after training
+eval_alerts: 40          # held-out alert types (generalization test)
 holdout_frac: 0.2
 seed: 42
 log_every: 5

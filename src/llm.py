@@ -32,7 +32,7 @@ SYSTEM_PROMPT = (
     "site reliability team. Use ONLY the SOP and precedent tickets in the message. "
     "Reply with JSON only, exactly: "
     '{"root_cause_summary": "<1-2 sentences>", "next_steps": ["<step>", "..."]}. '
-    "Give 2 to 5 next steps, each one imperative sentence taken or adapted from the SOP "
+    "The summary must name the probable-cause alert. Give 2 to 5 next steps, each one imperative sentence taken or adapted from the SOP "
     "or a precedent. Never invent commands, numbers, hosts, or systems. Never say an "
     "action was already taken: a human engineer approves every change."
 )
@@ -74,7 +74,8 @@ def build_messages(ctx: dict) -> list[dict]:
     else:
         lines.append("\nNo SOP covers this event type. Use precedent only and say a SOP is missing.")
 
-    lines.append("\nPrecedent tickets:")
+    lines.append("\nPrecedent tickets (same event type; they may describe a different cause, "
+                 "so use one only if it matches the probable cause):")
     for t in ctx.get("precedents", []):
         lines.append(f"- {t['incident_id']} (seen {t['precedent_count']}x): {t['root_cause']} "
                      f"Remediation: {t['remediation']}")

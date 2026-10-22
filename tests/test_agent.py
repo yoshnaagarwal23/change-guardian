@@ -53,8 +53,9 @@ def test_security_signals_notify_secops(tools):
 
 def test_grounded_llm_output_is_used(tools):
     pid = _first_problem(tools, "Resource")
+    diagnosis = tools.correlate(pid)["probable_cause"]["root_cause"]
     reply = json.dumps({
-        "root_cause_summary": "Memory pressure on the host is exhausting worker capacity.",
+        "root_cause_summary": f"Memory pressure: {diagnosis}",
         "next_steps": ["Analyze the Process Performance breakdown to pinpoint the runaway thread.",
                        "Increase CPU/Memory allocations or scale deployment replicas."]})
     backend = FakeBackend(reply)
@@ -75,6 +76,28 @@ def test_ungrounded_steps_are_dropped_and_garbage_falls_back_to_rules(tools):
 
     card = TriageAgent(tools, FakeBackend("not json at all")).triage(pid)
     assert card["next_steps"] and any("fallback" in w for w in card["warnings"])
+
+
+def test_recalled_template_for_a_different_alert_is_rejected(tools):
+    # A disk alert answered with the (grounded!) GC/CPU ticket template: the failure
+    # the first LoRA adapter showed. Every word is in a source, so only consistency catches it.
+    disk = tools.alerts[tools.alerts["root_cause"].str.startswith("Disk space")].iloc[0]
+    corr = tools.correlate(disk["problem_id"])
+    if corr["probable_cause"]["root_cause"] != disk["root_cause"]:
+        pytest.skip("disk alert is a symptom in this problem")
+    recalled = json.dumps({
+        "root_cause_summary": "Extensive garbage collection (GC) cycles taking up 95% of active CPU "
+                              "cycles due to small JVM heap allocation settings.",
+        "next_steps": ["Review GC metrics in Dynatrace.",
+                       "Adjust container limits via deployment spec."]})
+    card = TriageAgent(tools, FakeBackend(recalled)).triage(disk["problem_id"])
+    assert "garbage collection" not in card["root_cause_summary"].lower()
+    assert any("does not match the alert" in w for w in card["warnings"])
+
+
+def test_prompt_warns_that_precedents_may_be_a_different_cause(tools):
+    ctx = TriageAgent(tools).build_context(_first_problem(tools, "Resource"))
+    assert "may describe a different cause" in build_messages(ctx)[-1]["content"]
 
 
 def test_parse_model_output_extracts_json_from_chatty_text():

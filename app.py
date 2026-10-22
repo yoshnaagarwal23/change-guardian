@@ -211,16 +211,17 @@ with tab_kpi:
         with st.expander("All KPI values"):
             st.json(k)
 
-    st.subheader("Fine-tuning results (held-out tickets)")
-    metrics_path = ADAPTER / "metrics.json"
-    if metrics_path.exists():
-        m = json.loads(metrics_path.read_text())
-        rows = {name: m[name] for name in ["base", "adapter"] if name in m}
-        st.dataframe(pd.DataFrame(rows).T.rename(index={"base": "Base model", "adapter": "Fine-tuned (LoRA)"}))
-        st.caption(f"{m['config']['model_id']} · {m['train']['steps']} steps · {m['train']['minutes']} min on "
-                   f"{m['device']}")
+    st.subheader("Model evaluation (held-out alert types the model never saw)")
+    comparison = Path("reports/model_comparison.json")
+    if comparison.exists():
+        table = pd.DataFrame(json.loads(comparison.read_text())).T
+        keep = [c for c in ["alert_consistency", "alert_branch_hit_rate", "alert_grounding",
+                            "alert_json_valid_rate", "ticket_rouge_l"] if c in table]
+        st.dataframe(table[keep].style.format("{:.2f}"), width="stretch")
+        st.caption("consistency = summary names the alert that fired · branch hit = picked the right SOP "
+                   "remedy · grounding = steps traceable to SOP/tickets")
     else:
-        st.info("Train an adapter with `uv run python src/train_lora.py --config configs/mac.yaml --eval-base`.")
+        st.info("Run `uv run python src/compare_models.py models/lora-mac` to compare models.")
 
 # ----------------------------------------------------------------------------- audit tab
 with tab_audit:

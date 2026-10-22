@@ -10,5 +10,5 @@ grid:
   learning_rate: [5.0e-5, 1.0e-4, 2.0e-4]
   lora.r: [8, 16, 32]
   epochs: [2, 3]
-# Rank runs by this metric from metrics.json -> adapter.
-objective: grounding
+# Rank runs by this metric from metrics.json -> adapter (held-out alert types).
+objective: alert_branch_hit_rate

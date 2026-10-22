@@ -86,13 +86,19 @@ def load_sops(sop_dir: Path) -> dict[str, Sop]:
     return {s.sop_id: s for s in sops}
 
 
-def rank_remedies(sop: Sop, query: str, k: int = 2) -> list[tuple[Remedy, float]]:
-    """Which remediation branch of the SOP fits this diagnosis best."""
-    docs = [expand(r.text) for r in sop.remedies]
+def rank_texts(texts: list[str], query: str, k: int | None = None) -> list[tuple[str, float]]:
+    """Rank short texts (SOP steps, remedies) by relevance to a diagnosis. Stable on ties."""
+    docs = [expand(t) for t in texts]
     vec = TfidfVectorizer().fit(docs + [expand(query)])
     sims = cosine_similarity(vec.transform([expand(query)]), vec.transform(docs))[0]
-    ranked = sorted(zip(sop.remedies, sims), key=lambda pair: -pair[1])
-    return [(r, float(s)) for r, s in ranked[:k]]
+    ranked = sorted(range(len(texts)), key=lambda i: -sims[i])
+    return [(texts[i], float(sims[i])) for i in ranked[:k]]
+
+
+def rank_remedies(sop: Sop, query: str, k: int = 2) -> list[tuple[Remedy, float]]:
+    """Which remediation branch of the SOP fits this diagnosis best."""
+    by_text = {r.text: r for r in sop.remedies}
+    return [(by_text[t], s) for t, s in rank_texts([r.text for r in sop.remedies], query, k)]
 
 
 class TicketIndex:

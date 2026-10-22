@@ -20,7 +20,8 @@ import re
 import time
 from pathlib import Path
 
-from guardrails import approval_plan, grounding_score
+from guardrails import CONSISTENCY_MIN, alert_consistency, approval_plan, grounding_score
+from knowledge import rank_texts
 from llm import build_messages, get_backend, parse_model_output
 from schema import TriageCard
 from tools import TriageTools
@@ -62,6 +63,10 @@ class TriageAgent:
                 "sop_id": sop.sop_id, "title": sop.title,
                 "diagnostic_steps": sop.diagnostic_steps,
                 "remedies": [r.text for r, _ in remedies]},
+            # The two diagnostic steps most relevant to this alert, kept in SOP order.
+            "focus_steps": [s for s in sop.diagnostic_steps
+                            if s in {t for t, _ in rank_texts(sop.diagnostic_steps, cause["root_cause"], 2)}]
+            if sop else [],
             "sop_all_text": sop.all_text if sop else [],
             "remedy_score": remedies[0][1] if remedies else 0.0,
             "precedents": precedents,
@@ -85,7 +90,7 @@ class TriageAgent:
             steps.append(f"Check change {c.get('change_id', '')} ({c.get('description', '')}); "
                          "if the problem started after it, request a rollback.")
         if sop:
-            steps += sop["diagnostic_steps"][:2]
+            steps += ctx["focus_steps"]
             steps += [r.split(": ", 1)[-1] for r in sop["remedies"][:1]]
         elif precedents:
             steps += split_sentences(precedents[0]["remediation"])[:3]
@@ -109,6 +114,9 @@ class TriageAgent:
                        + [p["remediation"] + " " + p["root_cause"] for p in ctx["precedents"]])
             try:
                 proposed = parse_model_output(gen.text)
+                diagnosis = ctx["probable_cause"]["root_cause"]
+                if alert_consistency(proposed["root_cause_summary"], diagnosis) < CONSISTENCY_MIN:
+                    raise ValueError("model summary does not match the alert (possible template recall)")
                 kept = [s for s in proposed["next_steps"] if grounding_score(s, sources) >= GROUNDING_MIN]
                 if len(kept) < len(proposed["next_steps"]):
                     warnings.append(f"dropped {len(proposed['next_steps']) - len(kept)} ungrounded step(s)")
