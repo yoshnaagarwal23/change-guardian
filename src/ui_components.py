@@ -31,6 +31,7 @@ CSS = """
     #0A0F14;
 }
 header[data-testid="stHeader"] {background: transparent;}
+.ic {display:inline-block; width:1em; height:1em; flex:none; vertical-align:-0.125em;}
 .block-container {padding-top: 1.4rem; max-width: 1480px;}
 .cg-eyebrow {font: 600 11px JetBrainsMono, monospace; letter-spacing: .14em; text-transform: uppercase;
   color: #8B98A5; margin: 0 0 8px 0; display:flex; align-items:center; gap:8px;}
@@ -50,7 +51,7 @@ header[data-testid="stHeader"] {background: transparent;}
 .chip {display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px;
   font: 500 12px Inter, sans-serif; border:1px solid #2B3B4C; color:#C9D4DE; background:rgba(255,255,255,.03);
   white-space:nowrap;}
-.chip svg {width:12px; height:12px;}
+.chip .ic {width:12px; height:12px;}
 .chip.mono {font-family: JetBrainsMono, monospace; font-size: 11.5px;}
 .chip.crit {color:#FF8A87; border-color:rgba(242,95,92,.45); background:rgba(242,95,92,.10);}
 .chip.high {color:#FFC65C; border-color:rgba(255,178,36,.45); background:rgba(255,178,36,.10);}
@@ -62,20 +63,24 @@ header[data-testid="stHeader"] {background: transparent;}
 .cg-chips {display:flex; gap:6px; flex-wrap:wrap; margin: 8px 0 4px 0;}
 .cg-banner {display:flex; gap:10px; align-items:flex-start; padding:10px 14px; border-radius:10px;
   font-size:.9rem; margin: 6px 0;}
-.cg-banner svg {width:15px; height:15px; margin-top:2px; flex:none;}
+.cg-banner .ic {width:15px; height:15px; margin-top:2px;}
 .cg-banner.crit {background:rgba(242,95,92,.08); border:1px solid rgba(242,95,92,.35); color:#FFB3B1;}
 .cg-banner.warn {background:rgba(255,178,36,.07); border:1px solid rgba(255,178,36,.30); color:#FFD48A;}
 .tl {position:relative; margin: 4px 0 0 6px; padding-left: 22px; border-left: 1px dashed #2B3B4C;}
 .tl-item {position:relative; padding: 2px 0 14px 0;}
 .tl-node {position:absolute; left:-31px; top:2px; width:18px; height:18px; border-radius:50%;
   display:flex; align-items:center; justify-content:center; background:#0A0F14; border:1px solid #2B3B4C;}
-.tl-node svg {width:10px; height:10px;}
+.tl-node .ic {width:10px; height:10px;}
 .tl-item.cause .tl-node {border-color:#FFB224; color:#FFB224; box-shadow:0 0 12px rgba(255,178,36,.35);}
 .tl-item.symptom .tl-node {color:#8B98A5;}
 .tl-item.gap .tl-node {color:#5AA9E6; border-style:dashed;}
-.tl-head {display:flex; gap:8px; align-items:center; font-size:.78rem; color:#8B98A5;
-  font-family: JetBrainsMono, monospace;}
-.tl-label {font-weight:600; letter-spacing:.06em; text-transform:uppercase; font-size:.7rem;}
+.tl-head {display:flex; flex-wrap:wrap; gap:6px; align-items:center; font-size:.76rem; color:#8B98A5;
+  font-family: JetBrainsMono, monospace; white-space:nowrap; margin-top:2px;}
+.tl-label {font: 600 .68rem JetBrainsMono, monospace; letter-spacing:.1em; text-transform:uppercase;
+  color:#8B98A5;}
+.cg-guard {list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;}
+.cg-guard li {display:flex; gap:8px; align-items:flex-start; font-size:.84rem; color:#AAB6C2; line-height:1.35;}
+.cg-guard .ic {color:#7BD88F; width:13px; height:13px; margin-top:3px;}
 .tl-item.cause .tl-label {color:#FFB224;} .tl-item.gap .tl-label {color:#5AA9E6;}
 .tl-text {margin-top:3px; font-size:.95rem; color:#E6EDF3;}
 .tl-item.symptom .tl-text, .tl-item.gap .tl-text {color:#AAB6C2;}
@@ -87,7 +92,7 @@ header[data-testid="stHeader"] {background: transparent;}
   display:flex; align-items:center; justify-content:center; border:1px solid #2B3B4C;}
 .rb-text {font-size:.92rem; line-height:1.4;}
 .rb-tags {display:flex; flex-direction:column; gap:4px; align-items:flex-end;}
-.pc {display:grid; grid-template-columns: 1fr auto; gap:6px 14px; padding:10px 0; border-bottom:1px solid #1A2430;}
+.pc {display:grid; grid-template-columns: 1fr; gap:6px; padding:10px 0; border-bottom:1px solid #1A2430;}
 .pc:last-child {border-bottom:none;}
 .pc-id {font: 600 12.5px JetBrainsMono, monospace; color:#C9D4DE;}
 .pc-cause {grid-column: 1 / -1; font-size:.9rem;}
@@ -106,10 +111,16 @@ footer {visibility: hidden;}
 
 @lru_cache(maxsize=None)
 def icon(name: str) -> str:
-    """Inline Font Awesome SVG that inherits the surrounding text color."""
-    svg = (ICONS / f"{name}.svg").read_text()
-    svg = svg.replace(svg[svg.index("<!--"):svg.index("-->") + 3], "") if "<!--" in svg else svg
-    return svg.replace("<svg ", '<svg fill="currentColor" style="width:1em;height:1em" ', 1)
+    """Font Awesome icon as a CSS mask, tinted with the surrounding text color.
+
+    st.html sanitizes inline <svg>, so the SVG is served from static/ (Streamlit static
+    serving) and used as a mask over a currentColor background.
+    """
+    if not (ICONS / f"{name}.svg").exists():
+        raise FileNotFoundError(f"missing icon {name}")
+    url = f"app/static/icons/{name}.svg"
+    return (f'<i class="ic" style="-webkit-mask:url({url}) center/contain no-repeat;'
+            f'mask:url({url}) center/contain no-repeat;background-color:currentColor"></i>')
 
 
 def chip(text: str, kind: str = "", icon_name: str | None = None, mono: bool = False) -> str:
@@ -142,12 +153,17 @@ def _tl_item(kind: str, label: str, icon_name: str, alert: dict) -> str:
     return f"""
 <div class="tl-item {kind}">
   <div class="tl-node">{icon(icon_name)}</div>
-  <div class="tl-head"><span class="tl-label">{label}</span>
-    <span>{escape(str(alert["timestamp"]))[11:16]}</span><span>·</span>
-    <span>{escape(alert["entity_name"])}</span>
+  <div class="tl-label">{label}</div>
+  <div class="tl-head"><span>{escape(str(alert["timestamp"]))[11:16]}</span><span>·</span>
+    <span>{escape(alert["entity_name"])}</span><span>·</span>
     <span style="color:{SEV_COLOR.get(alert["severity"], MUTED)}">{escape(alert["severity"])}</span></div>
   <div class="tl-text">{escape(alert["root_cause"])}</div>
 </div>"""
+
+
+def guardrail_list(items: list[str]) -> str:
+    rows = "".join(f'<li>{icon("circle-check")}<span>{escape(t)}</span></li>' for t in items)
+    return f'<ul class="cg-guard">{rows}</ul>'
 
 
 def timeline(card: dict) -> str:

@@ -121,10 +121,12 @@ uv run streamlit run app.py     # opens the console at http://localhost:8501
 To use the local model and fine-tuning as well:
 
 ```bash
-uv sync --extra ml              # torch, transformers, peft, mlflow
+uv sync --all-extras            # + torch, transformers, peft, mlflow, anthropic
 ```
 
-Optional hosted comparison backend: `uv sync --extra anthropic`, then put `ANTHROPIC_API_KEY=...` in `.env` (git-ignored).
+> **Heads-up:** a plain `uv sync` or `uv add <pkg>` removes extras that aren't requested, including torch from under a running training job. Once you work with the model, always use `uv sync --all-extras` and `uv run --all-extras ...`.
+
+Optional hosted comparison backend: put `ANTHROPIC_API_KEY=...` in `.env` (git-ignored).
 
 <details>
 <summary>Using pip instead of uv</summary>
@@ -149,7 +151,7 @@ All commands run from the repo root.
 | Triage specific problems | `uv run python src/agent.py --problem P-261002 --problem P-261003` |
 | Score agent output against the routing rules + make a rating sheet | `uv run python src/evaluate.py` |
 | Run the live console | `uv run streamlit run app.py` |
-| Run the API (docs at `/docs`) | `uv run uvicorn api:create_app --factory --app-dir src --port 8000` |
+| Run the API (optional, not used by the console) | `uv run uvicorn api:create_app --factory --app-dir src --port 8000` |
 | Build fine-tuning data | `uv run python src/sft_data.py` |
 | Fine-tune on a Mac | `uv run python src/train_lora.py --config configs/mac.yaml --eval-base` |
 | See training runs | `uv run mlflow ui` |
@@ -163,6 +165,31 @@ curl -X POST localhost:8000/triage/P-261002
 curl -X POST localhost:8000/decision -H 'content-type: application/json' \
      -d '{"problem_id":"P-261002","decision":"approved","user":"swap"}'
 ```
+
+## The console
+
+![Triage view](docs/img/triage.png)
+
+| Area | What it shows |
+|---|---|
+| Hero + KPI cards | Alerts in vs pages out, SOP coverage, decisions logged, live audit-chain status |
+| Problem feed | Clickable table filtered by severity and event-type pills |
+| Correlation timeline | Probable cause (amber), suppressed symptoms, telemetry gaps (blue), related problems |
+| Root-cause summary | The model's or the rules' summary, confidence meter, tokens, cost |
+| Runbook | Numbered steps tagged diagnostic / change / security; changes on production are locked behind approval |
+| Precedents | Past tickets labeled *matches this alert* or *same event type · different cause* |
+| Draft Remedy ticket | Editable before approval, with SOP full text and ticket JSON |
+| Approve / Escalate / Reject | Writes to the hash-chained audit log |
+| Insights tab | Noise funnel, problems by event type (no-SOP gaps in red), base vs fine-tuned model chart |
+
+**Design.** It's a dark operations console. The navy-black base and warm amber accent come from metopipharma.com, the grid backdrop, monospace labels and lime "safe" green from NVIDIA Brev, and the terminal-style security tone from kamoku.tech. The glow and pulse effects are recreated in CSS after MagicUI. Built with:
+- [Streamlit](https://docs.streamlit.io/) with a custom theme (`.streamlit/config.toml`)
+- [streamlit-shadcn-ui](https://github.com/ObservedObserver/streamlit-shadcn-ui) (ShadCN) for tabs, metric cards and buttons
+- [Plotly](https://plotly.com/python/) for charts
+- [Google Fonts](https://fonts.google.com/) Inter and JetBrains Mono
+- [Font Awesome](https://fontawesome.com/) Free icons (CC BY 4.0)
+
+Fonts and icons are self-hosted in `static/`, so the demo looks identical with no internet. The HTML building blocks live in [`src/ui_components.py`](src/ui_components.py) and are unit-tested, including HTML-escaping of alert text. Regenerate screenshots with [`scripts/screenshot.py`](scripts/screenshot.py) (Playwright).
 
 ## Live demo script
 
@@ -293,11 +320,15 @@ Also available: `alerts.csv` (each alert) and `tickets.csv` (past Remedy tickets
 
 ```
 app.py                  Streamlit live console
+.streamlit/config.toml  console theme (colors, self-hosted fonts)
+static/                 self-hosted fonts + Font Awesome icons
+docs/img/               console screenshots
 configs/                mac.yaml, cluster.yaml, sweep.yaml (LoRA hyperparameters)
 data/raw/               client sample files (do not edit)
 data/processed/         cleaned files from load_data.py
 data/sops/              one Markdown file per SOP
 scripts/sweep.sbatch    SLURM array job for the cluster sweep
+scripts/screenshot.py   Playwright screenshots of the console
 src/load_data.py        cleaning + grouping, routing rules, SOP map
 src/correlate.py        probable cause, symptoms, telemetry gaps, related problems
 src/knowledge.py        SOP parsing, remediation-branch ranking, precedent search
@@ -311,7 +342,9 @@ src/api.py              FastAPI service
 src/sft_data.py         fine-tuning data from tickets
 src/train_lora.py       LoRA training + evaluation (PyTorch loop, MLflow)
 src/sweep.py            hyperparameter grid runner
-src/metrics.py          ROUGE-L, JSON validity, grounding
+src/metrics.py          ROUGE-L, JSON validity, grounding, alert consistency, branch hit
+src/compare_models.py   base vs adapters on the same held-out set
+src/ui_components.py    HTML building blocks for the console
 src/evaluate.py         contract scoring + human rating sheet
 tests/                  pytest suite (written before the code)
 ```

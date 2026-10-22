@@ -86,8 +86,8 @@ with st.sidebar:
     reviewer = st.text_input("Reviewer", "on-call SRE", label_visibility="collapsed")
     st.divider()
     st.html(ui.eyebrow("Guardrails", "lock"))
-    st.markdown("- Production changes need approval\n- Steps must trace to an SOP or ticket\n"
-                "- Summary must name the alert that fired\n- Every decision is hash-chained")
+    st.html(ui.guardrail_list(["Production changes need approval", "Steps must trace to an SOP or ticket",
+                               "Summary must name the alert that fired", "Every decision is hash-chained"]))
 
 backend = None if mode in {"Rules only", "Replay (offline)"} else load_backend(mode)
 agent = TriageAgent(tools, backend)
@@ -112,8 +112,8 @@ k1, k2, k3, k4 = st.columns(4)
 with k1:
     sui.metric_card("Alerts received", n_alerts, description="Dynatrace sample, Oct 12–15", key="m1")
 with k2:
-    sui.metric_card("Pages after correlation", n_pages, delta=f"-{100 * (1 - n_pages / n_alerts):.0f}% noise",
-                    description="one page per problem", key="m2")
+    sui.metric_card("Pages after correlation", n_pages,
+                    description=f"-{100 * (1 - n_pages / n_alerts):.0f}% noise · one page per problem", key="m2")
 with k3:
     covered = sum(tools.find_sop(e) is not None for e in tools.problems["event_type"].unique())
     sui.metric_card("Event types with an SOP", f"{covered} / 6", description="gap: Monitoring Unavailable",
@@ -126,13 +126,14 @@ tab = sui.tabs(["Triage", "Insights", "Audit trail"], value="Triage", key="tabs"
 
 # ----------------------------------------------------------------------------- triage
 if tab == "Triage":
-    left, right = st.columns([1.05, 1.95], gap="large")
+    left, right = st.columns([1.2, 1.8], gap="large")
 
     with left:
         st.html(ui.eyebrow("Problem feed", "bell"))
         sev = st.pills("Severity", sorted(tools.problems["severity"].unique()), selection_mode="multi",
                        default=["SEV-1", "SEV-2"], label_visibility="collapsed")
         evt = st.pills("Event", sorted(tools.problems["event_type"].unique()), selection_mode="multi",
+                       format_func=lambda e: {"Monitoring Unavailable": "Monitoring", "Custom Alert": "Custom"}.get(e, e),
                        label_visibility="collapsed")
         feed = tools.problems
         if sev:
@@ -145,13 +146,13 @@ if tab == "Triage":
             "Problem": feed["problem_id"],
             "Event": feed["event_type"],
             "Entity": feed["entities"].str.split("; ").str[0],
-            "Seen": feed["first_seen"].dt.strftime("%b %d %H:%M"),
         })
         styled = view.style.map(lambda s: f"color:{ui.SEV_COLOR.get(s, ui.MUTED)};font-weight:600", subset=["Sev"])
         picked = st.dataframe(styled, hide_index=True, height=620, on_select="rerun",
                               selection_mode="single-row", key="feed", width="stretch",
-                              column_config={"Sev": st.column_config.TextColumn(width="small"),
-                                             "Problem": st.column_config.TextColumn(width="small")})
+                              column_config={"Sev": st.column_config.TextColumn(width=58),
+                                             "Problem": st.column_config.TextColumn(width=86),
+                                             "Event": st.column_config.TextColumn(width=110)})
         st.caption(f"{len(feed)} of {len(tools.problems)} problems · click a row")
 
     if feed.empty:
@@ -259,7 +260,7 @@ elif tab == "Insights":
     with g1, st.container(border=True):
         misrouted = sum(c["probable_cause"]["event_type"] != c["event_type"] for c in cards)
         fig = go.Figure(go.Funnel(
-            y=["Alerts", "Pages (correlated)", "Pages with an SOP", "Auto-routed to the cause team"],
+            y=["Alerts", "Pages (correlated)", "Pages with an SOP", "Routed to the probable-cause team"],
             x=[k["alerts_in"], k["pages_after_correlation"], round(len(cards) * k["sop_coverage_pct"] / 100),
                len(cards) - misrouted],
             marker=dict(color=[ui.AMBER, "#E0A030", ui.GREEN, ui.BLUE]), textinfo="value+percent initial"))

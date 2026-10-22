@@ -14,12 +14,13 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=8599)
     parser.add_argument("--out", type=Path, default=Path("docs/img"))
+    parser.add_argument("--height", type=int, default=1000)
     parser.add_argument("--tabs", nargs="*", default=["Triage", "Insights", "Audit trail"])
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
 
     with sync_playwright() as p:
-        page = p.chromium.launch().new_page(viewport={"width": 1600, "height": 1000}, device_scale_factor=1)
+        page = p.chromium.launch().new_page(viewport={"width": 1600, "height": args.height}, device_scale_factor=1)
         page.goto(f"http://localhost:{args.port}", wait_until="networkidle")
         page.wait_for_selector("text=Change Guardian", timeout=60_000)
         time.sleep(6)  # let component iframes and charts render

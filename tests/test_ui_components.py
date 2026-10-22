@@ -11,9 +11,12 @@ CARD = {
 }
 
 
-def test_icons_are_inline_svg_that_follow_text_color():
-    svg = ui.icon("lock")
-    assert svg.startswith("<svg") and "currentColor" in svg
+def test_icons_are_masks_that_follow_text_color_and_exist_on_disk():
+    # st.html strips inline <svg>, so icons are CSS masks over static files tinted with currentColor.
+    html = ui.icon("lock")
+    assert "app/static/icons/lock.svg" in html and "currentColor" in html
+    for name in ["shield-halved", "crosshairs", "eye-slash", "bell", "lock", "wrench", "user-shield"]:
+        assert (ui.ICONS / f"{name}.svg").exists()
 
 
 def test_timeline_orders_cause_symptoms_gaps_and_escapes_alert_text():
