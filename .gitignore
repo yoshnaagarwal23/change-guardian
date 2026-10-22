@@ -219,3 +219,11 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 outputs/
+# Change Guardian artifacts (regenerate with the commands in README.md)
+models/
+mlruns/
+mlartifacts/
+logs/
+data/sft/
+reports/sweep_results.csv
+mlflow.db

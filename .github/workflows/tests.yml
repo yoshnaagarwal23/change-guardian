@@ -1,0 +1,15 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync              # core deps only; model tests are marked slow and skipped
+      - run: uv run pytest -q
+      - run: uv run python src/agent.py --limit 150 && uv run python src/evaluate.py

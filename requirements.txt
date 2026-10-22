@@ -1,7 +1,13 @@
-pandas
-numpy
-scikit-learn
-streamlit
-anthropic
-python-dotenv
-openpyxl
+# Prefer uv:  uv sync   (see pyproject.toml). This file mirrors the core deps for pip users.
+pandas>=2.2
+numpy>=2.0
+scikit-learn>=1.5
+openpyxl>=3.1
+pydantic>=2.8
+pyyaml>=6.0
+python-dotenv>=1.0
+streamlit>=1.40
+fastapi>=0.115
+uvicorn>=0.30
+# Local model + fine-tuning:  pip install torch transformers peft accelerate datasets mlflow
+# Hosted comparison backend:  pip install anthropic
