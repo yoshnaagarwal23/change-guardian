@@ -1,0 +1,45 @@
+# Change Guardian theme: dark ops console.
+# Palette: navy-black base + warm amber accent (after metopipharma.com), lime "safe" green and
+# grid/mono developer feel (after NVIDIA Brev), terminal-style security tone (after kamoku.tech).
+# Fonts are self-hosted from Google Fonts in static/ so the demo looks the same offline.
+
+[server]
+enableStaticServing = true
+
+[theme]
+base = "dark"
+primaryColor = "#FFB224"
+backgroundColor = "#0A0F14"
+secondaryBackgroundColor = "#111821"
+textColor = "#E6EDF3"
+borderColor = "#1E2A36"
+showWidgetBorder = true
+baseRadius = "0.6rem"
+font = "Inter, sans-serif"
+headingFont = "Inter, sans-serif"
+codeFont = "JetBrainsMono, monospace"
+headingFontWeights = [700, 650, 600, 600, 600, 600]
+redColor = "#F25F5C"
+orangeColor = "#FFB224"
+yellowColor = "#FFD166"
+greenColor = "#7BD88F"
+blueColor = "#5AA9E6"
+grayColor = "#8B98A5"
+chartCategoricalColors = ["#FFB224", "#5AA9E6", "#7BD88F", "#F25F5C", "#B392F0", "#8B98A5"]
+dataframeHeaderBackgroundColor = "#0E151D"
+codeBackgroundColor = "#0E151D"
+
+[[theme.fontFaces]]
+family = "Inter"
+url = "app/static/fonts/Inter.woff2"
+weight = "300 800"
+
+[[theme.fontFaces]]
+family = "JetBrainsMono"
+url = "app/static/fonts/JetBrainsMono.woff2"
+weight = "400 700"
+
+[theme.sidebar]
+backgroundColor = "#0D131A"
+secondaryBackgroundColor = "#131C26"
+borderColor = "#1E2A36"

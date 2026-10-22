@@ -100,6 +100,16 @@ def test_prompt_warns_that_precedents_may_be_a_different_cause(tools):
     assert "may describe a different cause" in build_messages(ctx)[-1]["content"]
 
 
+def test_card_labels_precedents_and_only_cites_matching_ones(tools):
+    hc = tools.alerts[tools.alerts["root_cause"].str.startswith("Health check")]
+    pid = next(p for p in hc["problem_id"]
+               if tools.correlate(p)["probable_cause"]["root_cause"].startswith("Health check"))
+    card = TriageAgent(tools).triage(pid)
+    assert card["precedents"] and all("matches_alert" in p for p in card["precedents"])
+    assert not any(p["matches_alert"] for p in card["precedents"])
+    assert "precedent" not in card["root_cause_summary"].lower()  # don't cite an OOM ticket
+
+
 def test_parse_model_output_extracts_json_from_chatty_text():
     text = 'Sure! Here is the card:\n```json\n{"root_cause_summary": "x", "next_steps": ["a"]}\n```'
     assert parse_model_output(text) == {"root_cause_summary": "x", "next_steps": ["a"]}

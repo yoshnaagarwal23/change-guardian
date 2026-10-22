@@ -42,6 +42,24 @@ def test_rank_steps_puts_the_relevant_diagnostic_step_first(tools):
     assert "Disk IOPS" in best
 
 
+import pytest  # noqa: E402
+
+
+@pytest.mark.parametrize("diagnosis,ticket_cause,expected", [
+    ("Process crashed due to out-of-memory exception.",
+     "Linux kernel Out-Of-Memory (OOM) killer terminated the primary gateway process.", True),
+    ("Database connection pool exhausted. SocketTimeoutException.",
+     "Database connection pool exhausted due to unindexed query deployed in recent patch.", True),
+    ("Health check endpoint timeout after 5000ms.",
+     "Linux kernel Out-Of-Memory (OOM) killer terminated the primary gateway process.", False),
+    ("Disk space capacity remaining less than 5% on /var/log.",
+     "Extensive garbage collection (GC) cycles taking up 95% of active CPU cycles.", False),
+])
+def test_precedent_matches_only_when_it_describes_the_same_failure(diagnosis, ticket_cause, expected):
+    from knowledge import precedent_matches
+    assert precedent_matches(diagnosis, ticket_cause) is expected
+
+
 def test_similar_tickets_are_deduplicated_precedents_of_the_same_event_type(tools):
     hits = tools.find_similar_tickets("Process crashed due to out-of-memory exception.", "Availability")
     assert hits, "expected at least one precedent"

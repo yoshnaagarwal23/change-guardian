@@ -31,6 +31,23 @@ _EXPANSIONS = {
 _STATUS_RANK = {"Resolved": 0, "Closed": 1, "In Progress": 2, "Assigned": 3}
 
 
+def failure_modes(text: str) -> set[str]:
+    """Which domain failure modes (memory, disk, auth, ...) a text talks about."""
+    low = text.lower()
+    return {syn.strip() for pattern, syn in _EXPANSIONS.items() if re.search(pattern, low)}
+
+
+def precedent_matches(diagnosis: str, ticket_root_cause: str) -> bool:
+    """A precedent only counts if it describes the same failure mode as the alert.
+
+    Same event type is not enough: the client's tickets have one template per event type,
+    so a 'health check timeout' alert would otherwise be shown an OOM-crash precedent.
+    Latency is excluded because nearly every ticket mentions it.
+    """
+    shared = failure_modes(diagnosis) & failure_modes(ticket_root_cause)
+    return bool(shared - {"latency slowdown downstream"})
+
+
 def expand(text: str) -> str:
     low = text.lower()
     extra = [syn for pattern, syn in _EXPANSIONS.items() if re.search(pattern, low)]

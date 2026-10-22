@@ -21,7 +21,7 @@ import time
 from pathlib import Path
 
 from guardrails import CONSISTENCY_MIN, alert_consistency, approval_plan, grounding_score
-from knowledge import rank_texts
+from knowledge import precedent_matches, rank_texts
 from llm import build_messages, get_backend, parse_model_output
 from schema import TriageCard
 from tools import TriageTools
@@ -49,7 +49,8 @@ class TriageAgent:
         sop = t.find_sop(problem["event_type"])
         query = f"{problem['event_type']} {cause['root_cause']}"
         remedies = t.rank_remedies(sop, cause["root_cause"]) if sop else []
-        precedents = t.find_similar_tickets(query, problem["event_type"])
+        precedents = [{**p, "matches_alert": precedent_matches(cause["root_cause"], p["root_cause"])}
+                      for p in t.find_similar_tickets(query, problem["event_type"])]
         changes = t.find_recent_changes(problem["entities"], problem["first_seen"])
         return {
             "problem_id": problem_id,
@@ -81,9 +82,9 @@ class TriageAgent:
         if ctx["symptoms"]:
             on = ", ".join(sorted({a["entity_name"] for a in ctx["symptoms"]}))
             summary += f" {len(ctx['symptoms'])} later alert(s) on {on} look like downstream symptoms."
-        if precedents and precedents[0]["score"] >= 0.2:
-            p = precedents[0]
-            summary += f" Closest precedent {p['incident_id']} (seen {p['precedent_count']}x): {p['root_cause']}"
+        match = next((p for p in precedents if p.get("matches_alert")), None)
+        if match:
+            summary += f" Matches precedent {match['incident_id']} (seen {match['precedent_count']}x): {match['root_cause']}"
 
         steps: list[str] = []
         for c in ctx["recent_changes"][:1]:
@@ -146,6 +147,7 @@ class TriageAgent:
             "sop_id": sop_id,
             **answer,
             "similar_tickets": [p["incident_id"] for p in ctx["precedents"]],
+            "precedents": ctx["precedents"],
             "escalate": sop_id is None,
             "probable_cause": ctx["probable_cause"],
             "symptoms": ctx["symptoms"],
