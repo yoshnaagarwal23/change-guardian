@@ -113,8 +113,8 @@ Requires [uv](https://docs.astral.sh/uv/) (it installs Python 3.12 for you).
 ```bash
 git clone https://github.com/yoshnaagarwal23/change-guardian.git
 cd change-guardian
-uv sync                         # core: rules engine, UI, API, tests
-uv run pytest -q                # 35 tests, ~2 s
+uv sync                         # core: rules engine, UI, tests
+uv run pytest -q                # 50 tests, ~6 s
 uv run streamlit run app.py     # opens the console at http://localhost:8501
 ```
 
@@ -146,15 +146,17 @@ All commands run from the repo root.
 |---|---|
 | Rebuild processed data from `data/raw/` | `uv run python src/load_data.py` |
 | Triage 5 problems, rules only | `uv run python src/agent.py --limit 5` |
-| Triage with the local base model | `uv run python src/agent.py --backend hf --limit 5` |
-| Triage with the fine-tuned adapter | `uv run python src/agent.py --backend hf --adapter models/lora-mac --limit 5` |
+| Triage with the local base model | `uv run --all-extras python src/agent.py --backend hf --limit 5` |
+| Triage with the fine-tuned adapter (after training) | `uv run --all-extras python src/agent.py --backend hf --adapter models/lora-mac --limit 5` |
 | Triage specific problems | `uv run python src/agent.py --problem P-261002 --problem P-261003` |
 | Score agent output against the routing rules + make a rating sheet | `uv run python src/evaluate.py` |
-| Run the live console | `uv run streamlit run app.py` |
+| Run the live console (rules only) | `uv run streamlit run app.py` |
+| Run the console with the local-model engines | `uv run --all-extras streamlit run app.py` |
 | Run the API (optional, not used by the console) | `uv run uvicorn api:create_app --factory --app-dir src --port 8000` |
-| Build fine-tuning data | `uv run python src/sft_data.py` |
-| Fine-tune on a Mac | `uv run python src/train_lora.py --config configs/mac.yaml --eval-base` |
-| See training runs | `uv run mlflow ui` |
+| Build fine-tuning data | `uv run --all-extras python src/sft_data.py` |
+| Fine-tune on a Mac (lid open, plugged in) | `caffeinate -i uv run --all-extras python src/train_lora.py --config configs/mac.yaml` |
+| Compare base vs adapters | `uv run --all-extras python src/compare_models.py models/lora-mac-v1 models/lora-mac` |
+| See training runs | `uv run --all-extras mlflow ui --backend-store-uri sqlite:///mlflow.db` |
 
 Agent output goes to `outputs/agent_results.jsonl`, one card per line. Each card has the README contract fields plus reviewer context (probable cause, symptoms, step risk plan, warnings) and telemetry (backend, latency, tokens).
 
@@ -197,13 +199,13 @@ About four minutes, written for a CIO/COO audience.
 
 1. **The noise.** The header shows 300 alerts in and 150 pages after correlation. Say: "Half of today's pages are symptoms."
 2. **One incident.** Open a SEV-1 Availability problem. Show the probable cause on top, the suppressed symptom below, and the telemetry gap set aside.
-3. **The right SOP branch.** Open a Resource problem with a disk alert. The card picks *Disk Cleanup*, not *CPU reallocation*, and shows the precedent ticket with "seen 58x".
-4. **The guardrails.** Point at the 🔒 on change steps and the 🛡️ *notify SecOps* flag on an authentication-failure problem. Switch the engine to *Local model (base)* and show a warning that ungrounded steps were dropped. Then switch to *+ LoRA* and compare.
+3. **The right SOP branch.** Open a Resource problem with a disk alert. The runbook picks *Disk Cleanup*, not *CPU reallocation*, and the only precedent (a GC/CPU ticket seen 58x) is labeled *same event type · different cause*, so nobody follows it blindly.
+4. **The guardrails.** Point at the 🔒 on change steps and the 🛡️ *notify SecOps* flag on an authentication-failure problem. Switch the engine to *Local model (base)* and show a warning that ungrounded steps were dropped. Once the v2 adapter is trained, switch to *Local model + LoRA* and compare.
 5. **The gap.** Filter to *Monitoring Unavailable*. It escalates because no SOP covers it, and that is a finding: documentation drift, made visible.
 6. **The decision.** Edit a step, press **Approve**, and open the *Audit trail* tab to show the hash chain verified.
 7. **The business case.** In the *KPIs* tab, run the batch and show the fine-tuning table: $0 per triage on a laptop, about 1 second each.
 
-If Wi-Fi or the model fails on stage, choose **Replay** in the sidebar. It serves pre-computed cards from `outputs/demo_cache.jsonl`; make that file before the presentation with `uv run python src/agent.py --backend hf --adapter models/lora-mac --limit 150 --out outputs/demo_cache.jsonl`. Rules-only mode never needs a model.
+If Wi-Fi or the model fails on stage, choose **Replay** in the sidebar. It serves pre-computed cards from `outputs/demo_cache.jsonl`; make that file before the presentation with `uv run --all-extras python src/agent.py --backend hf --adapter models/lora-mac --limit 150 --out outputs/demo_cache.jsonl`. Rules-only mode never needs a model.
 
 ## Results
 
@@ -229,7 +231,7 @@ If Wi-Fi or the model fails on stage, choose **Replay** in the sidebar. It serve
 | Median latency, rules only / local 0.5B model on M1 Pro | 7 ms / ~1.1 s |
 | LLM cost per triage, local model | $0.00 |
 
-**Model quality** (20 held-out tickets, `models/lora-mac/metrics.json`): see [Fine-tuning the local model](#fine-tuning-the-local-model).
+**Model quality** (held-out alert types and tickets, `reports/model_comparison.json`): see [Fine-tuning the local model](#fine-tuning-the-local-model).
 
 The rules engine scores 100% on routing because the client's tickets follow fixed rules. That is the point: the model is never trusted with routing. Its quality has to be judged on the summary and steps, so `evaluate.py` also writes `outputs/rating_sheet.csv` for a human 1–5 rating.
 

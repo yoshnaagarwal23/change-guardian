@@ -4,6 +4,7 @@
 """
 from __future__ import annotations
 
+import importlib.util
 import json
 import os
 import sys
@@ -64,9 +65,12 @@ def batch_cards() -> list[dict]:
 
 
 tools = load_tools()
-modes = ["Rules only", "Local model (base)"]
-if (ADAPTER / "adapter_config.json").exists():
-    modes.insert(1, "Local model + LoRA")
+HAS_ML = all(importlib.util.find_spec(m) for m in ("torch", "transformers", "peft"))
+modes = ["Rules only"]
+if HAS_ML:  # local engines only when `uv sync --all-extras` installed the model stack
+    modes.append("Local model (base)")
+    if (ADAPTER / "adapter_config.json").exists():
+        modes.insert(1, "Local model + LoRA")
 if os.getenv("ANTHROPIC_API_KEY"):
     modes.append("Claude API")
 if REPLAY.exists():
