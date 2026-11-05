@@ -178,6 +178,8 @@ class TriageAgent:
 
 
 def main() -> None:
+    from dotenv import load_dotenv
+    load_dotenv()  # ANTHROPIC_API_KEY from .env for --backend anthropic
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--backend", default="rules", choices=["rules", "hf", "anthropic"])
     parser.add_argument("--model", help="HF model id or Claude model id")

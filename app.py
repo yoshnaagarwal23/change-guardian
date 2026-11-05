@@ -4,6 +4,7 @@
 """
 from __future__ import annotations
 
+import importlib.util
 import json
 import os
 import sys
@@ -15,6 +16,10 @@ import streamlit as st
 import streamlit_shadcn_ui as sui
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
+
+from dotenv import load_dotenv  # noqa: E402
+
+load_dotenv(Path(__file__).parent / ".env")  # ANTHROPIC_API_KEY etc.; real env vars still win
 
 import ui_components as ui  # noqa: E402
 from agent import TriageAgent  # noqa: E402
@@ -56,6 +61,18 @@ def load_backend(mode: str):
     return None
 
 
+# Engines that need optional packages. Missing ones are listed as "not configured" instead of offered.
+ENGINE_DEPS = {"Local model + LoRA": ["torch", "transformers", "peft"],
+               "Local model (base)": ["torch", "transformers"],
+               "Claude API": ["anthropic"]}
+ENGINE_FIX = {"Local model + LoRA": "uv sync --extra ml", "Local model (base)": "uv sync --extra ml",
+              "Claude API": "uv sync"}
+
+
+def missing_deps(mode: str) -> list[str]:
+    return [m for m in ENGINE_DEPS.get(mode, []) if importlib.util.find_spec(m) is None]
+
+
 @st.cache_data
 def load_replay() -> dict:
     if not REPLAY.exists():
@@ -87,19 +104,39 @@ def pending_scores() -> list[dict]:
 
 
 tools = load_tools()
-modes = ["Rules only", "Local model (base)"]
+candidates = ["Rules only", "Local model (base)"]
 if (ADAPTER / "adapter_config.json").exists():
-    modes.insert(1, "Local model + LoRA")
+    candidates.insert(1, "Local model + LoRA")
 if os.getenv("ANTHROPIC_API_KEY"):
-    modes.append("Claude API")
+    candidates.append("Claude API")
 if REPLAY.exists():
-    modes.append("Replay (offline)")
+    candidates.append("Replay (offline)")
+unavailable = {m: missing_deps(m) for m in candidates if missing_deps(m)}
+modes = [m for m in candidates if m not in unavailable]
 
 # ----------------------------------------------------------------------------- sidebar
 with st.sidebar:
     st.html(ui.eyebrow("Engine", "microchip"))
     mode = st.selectbox("Engine", modes, index=1 if "Local model + LoRA" in modes else 0,
                         label_visibility="collapsed")
+    if unavailable:
+        st.html(ui.note("Not configured: " + ", ".join(unavailable),
+                        " · ".join(f"{m}: missing {', '.join(d)} (run `{ENGINE_FIX[m]}`)"
+                                   for m, d in unavailable.items()), "triangle-exclamation"))
+
+    # Load the engine here so a failure shows as a small warning, never a crash; fall back to rules.
+    failed = st.session_state.setdefault("engine_failed", {})
+    backend = None
+    if mode not in {"Rules only", "Replay (offline)"}:
+        if mode not in failed:
+            try:
+                backend = load_backend(mode)
+            except Exception as exc:  # noqa: BLE001 - any load failure falls back to rules
+                failed[mode] = f"{type(exc).__name__}: {exc}"
+        if mode in failed:
+            st.html(ui.banner(f"{mode} failed to load, using Rules only.", "warn"))
+            st.html(ui.note("Why it failed", failed[mode], "magnifying-glass"))
+            mode = "Rules only"
     st.caption({"Rules only": "Deterministic: correlation, routing, SOP branch, precedents. $0, ~10 ms.",
                 "Local model + LoRA": "Qwen2.5-0.5B + our LoRA adapter, on this laptop. $0, ~1 s.",
                 "Local model (base)": "Untuned Qwen2.5-0.5B, for comparison.",
@@ -112,7 +149,6 @@ with st.sidebar:
     st.html(ui.guardrail_list(["Production changes need approval", "Steps must trace to an SOP or ticket",
                                "Summary must name the alert that fired", "Every decision is hash-chained"]))
 
-backend = None if mode in {"Rules only", "Replay (offline)"} else load_backend(mode)
 agent = TriageAgent(tools, backend)
 
 
