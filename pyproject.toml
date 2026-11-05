@@ -17,6 +17,7 @@ dependencies = [
     "uvicorn>=0.30",
     "streamlit-shadcn-ui>=1.4.0",
     "plotly>=7.1.0",
+    "anthropic>=2.1.0",
 ]
 
 [project.optional-dependencies]

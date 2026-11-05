@@ -18,12 +18,13 @@ from dataclasses import dataclass
 from schema import ModelAnswer
 
 DEFAULT_HF_MODEL = os.getenv("CG_HF_MODEL", "Qwen/Qwen2.5-0.5B-Instruct")
-DEFAULT_ANTHROPIC_MODEL = os.getenv("CG_ANTHROPIC_MODEL", "claude-opus-5-5")
+DEFAULT_ANTHROPIC_MODEL = os.getenv("CG_ANTHROPIC_MODEL", "claude-sonnet-5")
 
 # USD per 1M tokens (input, output), for the cost KPI. Local models cost 0 per token.
 PRICES = {
     "claude-opus-5-5": (4.00, 20.00),
     "claude-sonnet-5-5": (2.00, 10.00),
+    "claude-sonnet-5": (2.00, 10.00),
     "claude-haiku-5-5": (0.10, 0.50),
 }
 
@@ -129,8 +130,12 @@ class HFBackend:
                           int(inputs["input_ids"].shape[1]), int(len(new)))
 
 
+# Models that accept the server-side refusal fallback (`fallbacks: "default"`); others get a plain request.
+FALLBACK_MODELS = {"claude-fable-5-1", "claude-opus-5-5", "claude-opus-5", "claude-sonnet-5-5"}
+
+
 class AnthropicBackend:
-    """Claude via the official SDK. Thinking is always on for Opus 5.5; effort keeps it cheap."""
+    """Claude via the official SDK (default: Claude Sonnet 5). Adaptive thinking; low effort keeps it cheap."""
 
     def __init__(self, model: str = DEFAULT_ANTHROPIC_MODEL, effort: str = "low"):
         import anthropic
@@ -142,14 +147,15 @@ class AnthropicBackend:
 
     def generate(self, messages: list[dict]) -> Generation:
         system = messages[0]["content"]
+        fallback = ({"betas": ["server-side-fallback-2026-07-01"], "fallbacks": "default"}
+                    if self.model in FALLBACK_MODELS else {})
         response = self.client.beta.messages.create(
             model=self.model,
             max_tokens=4000,
             system=system,
             messages=messages[1:],
             output_config={"effort": self.effort},
-            betas=["server-side-fallback-2026-07-01"],
-            fallbacks="default",
+            **fallback,
         )
         if response.stop_reason == "refusal":
             return Generation("", response.usage.input_tokens, response.usage.output_tokens)
