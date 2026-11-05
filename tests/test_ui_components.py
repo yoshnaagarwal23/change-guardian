@@ -38,3 +38,13 @@ def test_precedents_say_whether_they_match_the_alert():
         {"incident_id": "INC2", "precedent_count": 9, "status": "Closed", "root_cause": "GC",
          "remediation": "Tune.", "matches_alert": False}])
     assert "matches this alert" in html and "different cause" in html
+
+
+def test_change_risk_lists_scored_changes_and_explains_an_empty_log():
+    html = ui.change_risk([{"change_id": "CHG-42", "entity": "db-01", "minutes_before": 15, "kind": "infrastructure",
+                            "description": "Index migration <b>", "risk_score": 0.81, "risk_level": "high",
+                            "reasons": ["deployed 15 min before the problem started"]}])
+    assert "CHG-42" in html and "high risk" in html and "15 min before" in html
+    assert "<b>" not in html and "&lt;b&gt;" in html
+    assert "No deploy log loaded" in ui.change_risk([], has_log=False)
+    assert "No deployments" in ui.change_risk([], has_log=True)

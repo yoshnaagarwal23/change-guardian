@@ -28,6 +28,7 @@ class TriageCard(BaseModel):
     telemetry_gaps: list[dict] = []
     related_problems: list[str] = []
     recent_changes: list[dict] = []
+    change_risk: dict | None = None
     notify_secops: bool = False
     step_plan: list[dict] = []
     confidence: float = 0.0

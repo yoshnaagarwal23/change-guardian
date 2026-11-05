@@ -23,6 +23,7 @@ from pathlib import Path
 from guardrails import CONSISTENCY_MIN, alert_consistency, approval_plan, grounding_score
 from knowledge import precedent_matches, rank_texts
 from llm import build_messages, get_backend, parse_model_output
+from risk_model import assess_changes
 from schema import TriageCard
 from tools import TriageTools
 
@@ -51,7 +52,9 @@ class TriageAgent:
         remedies = t.rank_remedies(sop, cause["root_cause"]) if sop else []
         precedents = [{**p, "matches_alert": precedent_matches(cause["root_cause"], p["root_cause"])}
                       for p in t.find_similar_tickets(query, problem["event_type"])]
-        changes = t.find_recent_changes(problem["entities"], problem["first_seen"])
+        alert_texts = [a["root_cause"] for a in [cause, *corr["symptoms"], *corr["telemetry_gaps"]]]
+        change_risk = assess_changes(t.find_recent_changes(problem["entities"], problem["first_seen"]),
+                                     problem["first_seen"], cause, corr["symptoms"], alert_texts)
         return {
             "problem_id": problem_id,
             "event_type": problem["event_type"],
@@ -59,7 +62,8 @@ class TriageAgent:
             "severity_label": problem["severity_label"],
             "entities": problem["entities"],
             **corr,
-            "recent_changes": changes,
+            "recent_changes": change_risk["changes"],
+            "change_risk": change_risk,
             "sop": None if sop is None else {
                 "sop_id": sop.sop_id, "title": sop.title,
                 "diagnostic_steps": sop.diagnostic_steps,
@@ -71,7 +75,7 @@ class TriageAgent:
             "sop_all_text": sop.all_text if sop else [],
             "remedy_score": remedies[0][1] if remedies else 0.0,
             "precedents": precedents,
-            "alert_texts": [a["root_cause"] for a in [cause, *corr["symptoms"], *corr["telemetry_gaps"]]],
+            "alert_texts": alert_texts,
         }
 
     # ------------------------------------------------------------ rules draft
@@ -87,9 +91,11 @@ class TriageAgent:
             summary += f" Matches precedent {match['incident_id']} (seen {match['precedent_count']}x): {match['root_cause']}"
 
         steps: list[str] = []
-        for c in ctx["recent_changes"][:1]:
-            steps.append(f"Check change {c.get('change_id', '')} ({c.get('description', '')}); "
-                         "if the problem started after it, request a rollback.")
+        suspect = ctx["change_risk"]["suspect"]
+        if suspect:
+            steps.append(f"Check change {suspect.get('change_id', '')} ({suspect.get('description', '')}), "
+                         f"deployed {suspect['minutes_before']:.0f} min before the problem on "
+                         f"{suspect.get('entity', '')}; if it is confirmed as the trigger, request a rollback.")
         if sop:
             steps += ctx["focus_steps"]
             steps += [r.split(": ", 1)[-1] for r in sop["remedies"][:1]]
@@ -131,6 +137,10 @@ class TriageAgent:
         sop_id = ctx["sop"]["sop_id"] if ctx["sop"] else None
         if sop_id is None:
             warnings.append(f"No SOP covers '{ctx['event_type']}' alerts; escalated (documentation gap).")
+        suspect = ctx["change_risk"]["suspect"]
+        if suspect:
+            warnings.append(f"{suspect['risk_level'].capitalize()}-risk change {suspect.get('change_id', '')} "
+                            f"on {suspect.get('entity', '')} may have triggered this problem.")
         notify_secops = any(re.search(_SECURITY_SIGNAL, t.lower()) for t in ctx["alert_texts"])
         if notify_secops:
             warnings.append("Security signal: notify SecOps before any remediation.")
@@ -154,6 +164,7 @@ class TriageAgent:
             "telemetry_gaps": ctx["telemetry_gaps"],
             "related_problems": ctx["related_problems"],
             "recent_changes": ctx["recent_changes"],
+            "change_risk": {k: v for k, v in ctx["change_risk"].items() if k != "changes"},
             "notify_secops": notify_secops,
             "step_plan": approval_plan(answer["next_steps"], ctx["entities"]),
             "confidence": confidence,

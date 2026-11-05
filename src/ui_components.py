@@ -11,6 +11,8 @@ from functools import lru_cache
 from html import escape
 from pathlib import Path
 
+from alert_trust import badge
+
 ICONS = Path(__file__).resolve().parents[1] / "static" / "icons"
 
 AMBER, GREEN, RED, BLUE, MUTED = "#FFB224", "#7BD88F", "#F25F5C", "#5AA9E6", "#8B98A5"
@@ -149,7 +151,14 @@ def hero(engine: str, chain_ok: bool, alerts: int, pages: int) -> str:
 </div>"""
 
 
-def _tl_item(kind: str, label: str, icon_name: str, alert: dict) -> str:
+def trust_badge(trust: float, n: int) -> str:
+    label, kind = badge(trust)
+    return chip(f"{label} · Trust {trust:.0%} (n={n})", kind, "gauge-high")
+
+
+def _tl_item(kind: str, label: str, icon_name: str, alert: dict, trust: dict | None = None) -> str:
+    t = (trust or {}).get(alert["root_cause"])
+    badge_html = f'<div style="margin-top:5px">{trust_badge(*t)}</div>' if t else ""
     return f"""
 <div class="tl-item {kind}">
   <div class="tl-node">{icon(icon_name)}</div>
@@ -157,7 +166,7 @@ def _tl_item(kind: str, label: str, icon_name: str, alert: dict) -> str:
   <div class="tl-head"><span>{escape(str(alert["timestamp"]))[11:16]}</span><span>·</span>
     <span>{escape(alert["entity_name"])}</span><span>·</span>
     <span style="color:{SEV_COLOR.get(alert["severity"], MUTED)}">{escape(alert["severity"])}</span></div>
-  <div class="tl-text">{escape(alert["root_cause"])}</div>
+  <div class="tl-text">{escape(alert["root_cause"])}</div>{badge_html}
 </div>"""
 
 
@@ -166,10 +175,11 @@ def guardrail_list(items: list[str]) -> str:
     return f'<ul class="cg-guard">{rows}</ul>'
 
 
-def timeline(card: dict) -> str:
-    items = [_tl_item("cause", "Probable cause", "crosshairs", card["probable_cause"])]
-    items += [_tl_item("symptom", "Suppressed symptom", "bell", a) for a in card.get("symptoms", [])]
-    items += [_tl_item("gap", "Telemetry gap", "eye-slash", a) for a in card.get("telemetry_gaps", [])]
+def timeline(card: dict, trust: dict | None = None) -> str:
+    """trust: alert name -> (score, n); shown as a badge, never used to hide an alert."""
+    items = [_tl_item("cause", "Probable cause", "crosshairs", card["probable_cause"], trust)]
+    items += [_tl_item("symptom", "Suppressed symptom", "bell", a, trust) for a in card.get("symptoms", [])]
+    items += [_tl_item("gap", "Telemetry gap", "eye-slash", a, trust) for a in card.get("telemetry_gaps", [])]
     return f'<div class="tl">{"".join(items)}</div>'
 
 
@@ -201,6 +211,34 @@ def precedents(items: list[dict]) -> str:
   <div>{tag}</div>
   <div class="pc-cause">{escape(p["root_cause"])}</div>
   <div class="pc-fix">Remediation: {escape(p["remediation"])}</div>
+</div>""")
+    return "".join(rows)
+
+
+LEVEL_KIND = {"high": "crit", "medium": "high", "low": "muted"}
+
+
+def change_risk(changes: list[dict], has_log: bool = True) -> str:
+    """Recent deployments on the problem's entities, highest risk first, with the reasons."""
+    if not changes:
+        msg = ("No deployments on these entities in the 24 h before the problem." if has_log else
+               "No deploy log loaded. Add data/changes/deployments.csv "
+               "(change_id, timestamp, entity, description) to score recent changes.")
+        return f'<div class="cg-sub">{escape(msg)}</div>'
+    rows = []
+    for c in changes:
+        lvl = c.get("risk_level", "low")
+        tag = chip(f"{lvl} risk · {c.get('risk_score', 0):.2f}", LEVEL_KIND.get(lvl, "muted"), "bolt")
+        mins = c.get("minutes_before")
+        when = f"{mins:.0f} min before" if mins is not None and mins >= 0 else "after the problem started"
+        reasons = "".join(f"<li>{escape(r)}</li>" for r in c.get("reasons", []))
+        rows.append(f"""
+<div class="pc">
+  <div class="pc-id">{escape(str(c.get("change_id", "")))} <span style="color:#8B98A5">·
+    {escape(str(c.get("entity", "")))} · {escape(when)} · {escape(c.get("kind", ""))}</span></div>
+  <div>{tag}</div>
+  <div class="pc-cause">{escape(str(c.get("description", "")))}</div>
+  <ul class="pc-fix" style="margin:0;padding-left:18px">{reasons}</ul>
 </div>""")
     return "".join(rows)
 

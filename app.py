@@ -18,15 +18,19 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 import ui_components as ui  # noqa: E402
 from agent import TriageAgent  # noqa: E402
+from alert_trust import ACTION, NO_ACTION, badge, disposition, load_history, trust_lookup, trust_table  # noqa: E402
 from guardrails import AuditLog  # noqa: E402
 from kpis import compute_kpis  # noqa: E402
 from llm import get_backend  # noqa: E402
-from tools import TriageTools  # noqa: E402
+from tools import CHANGES, TriageTools  # noqa: E402
 
 AUDIT = Path("outputs/audit_log.jsonl")
 REPLAY = Path("outputs/demo_cache.jsonl")
 ADAPTER = Path("models/lora-mac")
 COMPARISON = Path("reports/model_comparison.json")
+# Real change records win; the invented demo log is only a fallback (scripts/make_demo_changes.py).
+DEMO_CHANGES = Path("data/changes/deployments_demo.csv")
+DEMO_MODE = not CHANGES.exists() and DEMO_CHANGES.exists()
 
 st.set_page_config(page_title="Change Guardian", page_icon="🛡️", layout="wide",
                    initial_sidebar_state="expanded")
@@ -36,7 +40,7 @@ st.html(ui.CSS)
 # ----------------------------------------------------------------------------- data + engines
 @st.cache_resource
 def load_tools() -> TriageTools:
-    return TriageTools.from_disk()
+    return TriageTools.from_disk(changes_csv=DEMO_CHANGES if DEMO_MODE else CHANGES)
 
 
 @st.cache_resource(show_spinner="Loading local model…")
@@ -55,6 +59,15 @@ def load_replay() -> dict:
     if not REPLAY.exists():
         return {}
     return {c["problem_id"]: c for c in map(json.loads, REPLAY.read_text().splitlines())}
+
+
+@st.cache_data
+def alert_history() -> pd.DataFrame:
+    return load_history()
+
+
+def current_trust() -> pd.DataFrame:
+    return trust_table(alert_history(), st.session_state.get("dispositions", []))
 
 
 @st.cache_data
@@ -122,7 +135,7 @@ with k4:
     sui.metric_card("Decisions logged", len(log.entries()),
                     description="hash chain verified" if log.verify() else "chain broken", key="m4")
 
-tab = sui.tabs(["Triage", "Insights", "Audit trail"], value="Triage", key="tabs")
+tab = sui.tabs(["Triage", "Insights", "Alert Trust", "Audit trail"], value="Triage", key="tabs")
 
 # ----------------------------------------------------------------------------- triage
 if tab == "Triage":
@@ -186,7 +199,7 @@ if tab == "Triage":
         with c1, st.container(border=True):
             n = 1 + len(card["symptoms"]) + len(card["telemetry_gaps"])
             st.html(ui.eyebrow(f"Correlation · {n} alert{'s' if n > 1 else ''} → 1 page", "layer-group"))
-            st.html(ui.timeline(card))
+            st.html(ui.timeline(card, trust_lookup(current_trust())))
             if card["related_problems"]:
                 st.caption("Same entity within 60 min: " + ", ".join(card["related_problems"]))
         with c2, st.container(border=True):
@@ -202,6 +215,15 @@ if tab == "Triage":
             locked = sum(s["needs_approval"] for s in card["step_plan"])
             st.html(ui.eyebrow(f"Runbook · {len(card['step_plan'])} steps · {locked} need approval", "list-check"))
             st.html(ui.runbook(card["step_plan"]))
+
+        with st.container(border=True):
+            changes = card.get("recent_changes") or []
+            level = (card.get("change_risk") or {}).get("level", "none")
+            st.html(ui.eyebrow(f"Change risk · {len(changes)} recent deploy{'s' if len(changes) != 1 else ''}"
+                               f" · {level}", "bolt"))
+            if DEMO_MODE:
+                st.html(ui.chip("demo deploy log · invented changes", "muted", "triangle-exclamation"))
+            st.html(ui.change_risk(changes, has_log=tools.changes is not None))
 
         p1, p2 = st.columns([1.35, 1], gap="medium")
         with p1, st.container(border=True):
@@ -224,19 +246,33 @@ if tab == "Triage":
             with st.expander("Ticket JSON"):
                 st.json(tools.draft_ticket(final))
 
-        b1, b2, b3, _ = st.columns([1, 1, 1, 2.2])
+        b1, b2, b3, b4, _ = st.columns([1, 1, 1, 1.5, 0.7])
         with b1:
             approve = sui.button("Approve", key=f"ap-{pid}", width="stretch")
         with b2:
             escalate = sui.button("Escalate", variant="secondary", key=f"es-{pid}", width="stretch")
         with b3:
             reject = sui.button("Reject", variant="destructive", key=f"rj-{pid}", width="stretch")
+        with b4:
+            no_action = sui.button("No action needed", variant="outline", key=f"na-{pid}", width="stretch")
         decision = ("edited" if edit else "approved") if approve else "escalated" if escalate else \
             "rejected" if reject else None
+        alerts = [card["probable_cause"], *card["symptoms"], *card["telemetry_gaps"]]
         if decision:
             rec = AuditLog(AUDIT).append({"problem_id": pid, "decision": decision, "user": reviewer,
                                           "backend": card["backend"], "ticket": tools.draft_ticket(final)})
+            if decision != "rejected":  # approve / edit / escalate: the probable cause needed action
+                st.session_state.setdefault("dispositions", []).append(
+                    disposition(card["probable_cause"], ACTION, reviewer))
             st.toast(f"{decision.title()} by {reviewer} · hash {rec['hash'][:10]}…", icon="✅")
+        if no_action:
+            st.session_state.setdefault("dispositions", []).extend(
+                disposition(a, NO_ACTION, reviewer) for a in alerts)
+            rec = AuditLog(AUDIT).append({"problem_id": pid, "decision": NO_ACTION, "user": reviewer,
+                                          "backend": card["backend"],
+                                          "alerts": [a["root_cause"] for a in alerts]})
+            st.toast(f"{len(alerts)} alert(s) marked no action needed by {reviewer} · "
+                     f"hash {rec['hash'][:10]}…", icon="🔕")
 
 # ----------------------------------------------------------------------------- insights
 elif tab == "Insights":
@@ -291,6 +327,36 @@ elif tab == "Insights":
                        "unseen alerts). The alert-consistency guardrail now catches that failure for every model.")
         else:
             st.info("Run `uv run python src/compare_models.py models/lora-mac-v1 models/lora-mac` to populate.")
+
+# ----------------------------------------------------------------------------- alert trust
+elif tab == "Alert Trust":
+    table = current_trust()
+    st.html(ui.banner("Informational only: a low trust score never hides or suppresses an alert. "
+                      "It flags alert definitions a human may want to tune.", "warn", "circle-check"))
+    if table.empty:
+        st.info("Run `uv run python scripts/make_alert_dispositions.py` to create the demo history.")
+    else:
+        session_n = len(st.session_state.get("dispositions", []))
+        st.caption(f"Trust = share of past firings that needed action · {int(table['firings'].sum())} "
+                   f"dispositions ({session_n} from this session) · demo history in data/alert_dispositions.csv")
+        with st.container(border=True):
+            colors = [ui.GREEN if t >= 0.6 else ui.AMBER if t >= 0.3 else ui.RED for t in table["trust"]]
+            fig = go.Figure(go.Bar(x=table["trust"], y=table["alert_name"].str.rstrip("."), orientation="h",
+                                   marker=dict(color=colors), text=[f"{t:.0%}" for t in table["trust"]],
+                                   textposition="outside"))
+            fig.update_layout(title="Trust score by alert (red = noisy, review threshold)",
+                              xaxis=dict(range=[0, 1.1], tickformat=".0%"), yaxis=dict(autorange="reversed"),
+                              paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                              font=dict(family="Inter", color="#C9D4DE"), margin=dict(l=10, r=10, t=40, b=10),
+                              height=max(330, 24 * len(table)))
+            st.plotly_chart(fig, width="stretch")
+        view = pd.DataFrame({"Alert": table["alert_name"], "Type": table["alert_type"],
+                             "Firings": table["firings"], "% no action": table["no_action_pct"].round(0),
+                             "Trust": (100 * table["trust"]).round(0),
+                             "Status": [badge(t)[0] for t in table["trust"]]})
+        st.dataframe(view, hide_index=True, width="stretch",
+                     column_config={"% no action": st.column_config.NumberColumn(format="%d%%"),
+                                    "Trust": st.column_config.NumberColumn(format="%d%%")})
 
 # ----------------------------------------------------------------------------- audit
 else:
