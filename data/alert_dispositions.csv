@@ -1,0 +1,501 @@
+timestamp,alert_id,alert_name,alert_type,disposition,engineer
+2026-09-01 03:49:00,HIST-00001,Thread pool capacity exhausted for HTTP workers.,Resource,no_action_needed,sre-oncall-d
+2026-09-01 04:23:00,HIST-00002,Network interface packet loss exceeded 85%.,Availability,no_action_needed,sre-oncall-d
+2026-09-01 11:05:00,HIST-00003,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-d
+2026-09-01 11:34:00,HIST-00004,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-e
+2026-09-01 12:21:00,HIST-00005,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-b
+2026-09-01 13:29:00,HIST-00006,Network interface packet loss exceeded 85%.,Availability,action_needed,sre-oncall-d
+2026-09-01 13:35:00,HIST-00007,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,action_needed,sre-oncall-a
+2026-09-02 00:20:00,HIST-00008,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-a
+2026-09-02 00:55:00,HIST-00009,Thread pool capacity exhausted for HTTP workers.,Resource,no_action_needed,sre-oncall-a
+2026-09-02 01:10:00,HIST-00010,NullPointerException in transaction settlement controller.,Error,action_needed,sre-oncall-a
+2026-09-02 01:23:00,HIST-00011,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-d
+2026-09-02 02:12:00,HIST-00012,Docker container killed unexpectedly by OOM killer.,Availability,action_needed,sre-oncall-c
+2026-09-02 02:32:00,HIST-00013,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-e
+2026-09-02 04:57:00,HIST-00014,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,action_needed,sre-oncall-d
+2026-09-02 05:10:00,HIST-00015,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-b
+2026-09-02 07:29:00,HIST-00016,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-b
+2026-09-02 09:47:00,HIST-00017,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-b
+2026-09-02 11:10:00,HIST-00018,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-d
+2026-09-02 12:42:00,HIST-00019,Thread pool capacity exhausted for HTTP workers.,Resource,no_action_needed,sre-oncall-e
+2026-09-02 13:25:00,HIST-00020,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-e
+2026-09-02 14:56:00,HIST-00021,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-b
+2026-09-02 15:30:00,HIST-00022,Invalid authentication signature validation failures spiked.,Error,no_action_needed,sre-oncall-c
+2026-09-02 19:09:00,HIST-00023,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-a
+2026-09-03 00:00:00,HIST-00024,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-d
+2026-09-03 02:53:00,HIST-00025,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-c
+2026-09-03 03:46:00,HIST-00026,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-a
+2026-09-03 06:47:00,HIST-00027,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-09-03 08:45:00,HIST-00028,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-a
+2026-09-03 09:09:00,HIST-00029,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-d
+2026-09-03 09:21:00,HIST-00030,Thread pool capacity exhausted for HTTP workers.,Resource,no_action_needed,sre-oncall-b
+2026-09-03 10:24:00,HIST-00031,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-a
+2026-09-03 10:57:00,HIST-00032,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-a
+2026-09-03 11:43:00,HIST-00033,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-e
+2026-09-03 14:57:00,HIST-00034,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,no_action_needed,sre-oncall-e
+2026-09-03 16:40:00,HIST-00035,Thread pool capacity exhausted for HTTP workers.,Resource,no_action_needed,sre-oncall-a
+2026-09-03 18:47:00,HIST-00036,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-d
+2026-09-03 20:24:00,HIST-00037,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-d
+2026-09-03 20:44:00,HIST-00038,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,action_needed,sre-oncall-c
+2026-09-03 21:58:00,HIST-00039,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-a
+2026-09-03 22:48:00,HIST-00040,Thread pool capacity exhausted for HTTP workers.,Resource,no_action_needed,sre-oncall-a
+2026-09-03 23:58:00,HIST-00041,NullPointerException in transaction settlement controller.,Error,action_needed,sre-oncall-d
+2026-09-04 01:04:00,HIST-00042,Network interface packet loss exceeded 85%.,Availability,action_needed,sre-oncall-b
+2026-09-04 01:13:00,HIST-00043,Network interface packet loss exceeded 85%.,Availability,no_action_needed,sre-oncall-b
+2026-09-04 01:35:00,HIST-00044,Database read locking contention on index scan.,Slowdown,no_action_needed,sre-oncall-c
+2026-09-04 02:45:00,HIST-00045,Response time P95 degraded from 250ms to 3200ms.,Slowdown,action_needed,sre-oncall-c
+2026-09-04 03:32:00,HIST-00046,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-d
+2026-09-04 04:24:00,HIST-00047,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-c
+2026-09-04 04:42:00,HIST-00048,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-a
+2026-09-04 05:03:00,HIST-00049,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-09-04 11:02:00,HIST-00050,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-d
+2026-09-04 13:45:00,HIST-00051,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-d
+2026-09-04 17:12:00,HIST-00052,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-a
+2026-09-04 20:30:00,HIST-00053,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-b
+2026-09-04 21:57:00,HIST-00054,Health check endpoint timeout after 5000ms.,Availability,action_needed,sre-oncall-c
+2026-09-05 02:24:00,HIST-00055,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-a
+2026-09-05 03:20:00,HIST-00056,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-d
+2026-09-05 11:39:00,HIST-00057,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-b
+2026-09-05 12:49:00,HIST-00058,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-a
+2026-09-05 13:35:00,HIST-00059,Network interface packet loss exceeded 85%.,Availability,no_action_needed,sre-oncall-b
+2026-09-05 17:28:00,HIST-00060,Docker container killed unexpectedly by OOM killer.,Availability,action_needed,sre-oncall-c
+2026-09-05 19:35:00,HIST-00061,Database read locking contention on index scan.,Slowdown,no_action_needed,sre-oncall-c
+2026-09-05 21:00:00,HIST-00062,Database read locking contention on index scan.,Slowdown,no_action_needed,sre-oncall-c
+2026-09-06 06:14:00,HIST-00063,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,action_needed,sre-oncall-d
+2026-09-06 08:11:00,HIST-00064,Process crashed due to out-of-memory exception.,Availability,action_needed,sre-oncall-e
+2026-09-06 08:12:00,HIST-00065,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-d
+2026-09-06 08:52:00,HIST-00066,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-a
+2026-09-06 09:11:00,HIST-00067,Invalid authentication signature validation failures spiked.,Error,action_needed,sre-oncall-b
+2026-09-06 09:18:00,HIST-00068,Database read locking contention on index scan.,Slowdown,action_needed,sre-oncall-b
+2026-09-06 12:37:00,HIST-00069,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-d
+2026-09-06 13:58:00,HIST-00070,Memory usage reached critical threshold of 96%.,Resource,action_needed,sre-oncall-a
+2026-09-06 15:28:00,HIST-00071,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-b
+2026-09-06 15:33:00,HIST-00072,Database read locking contention on index scan.,Slowdown,no_action_needed,sre-oncall-a
+2026-09-06 22:49:00,HIST-00073,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-b
+2026-09-06 23:34:00,HIST-00074,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-b
+2026-09-06 23:36:00,HIST-00075,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-e
+2026-09-06 23:43:00,HIST-00076,Invalid authentication signature validation failures spiked.,Error,no_action_needed,sre-oncall-b
+2026-09-07 00:46:00,HIST-00077,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-c
+2026-09-07 01:40:00,HIST-00078,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-a
+2026-09-07 04:23:00,HIST-00079,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-09-07 04:50:00,HIST-00080,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-e
+2026-09-07 08:40:00,HIST-00081,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-d
+2026-09-07 09:17:00,HIST-00082,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-a
+2026-09-07 09:52:00,HIST-00083,Docker container killed unexpectedly by OOM killer.,Availability,action_needed,sre-oncall-a
+2026-09-07 15:40:00,HIST-00084,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-b
+2026-09-07 21:36:00,HIST-00085,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-c
+2026-09-07 21:56:00,HIST-00086,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-c
+2026-09-07 22:10:00,HIST-00087,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-d
+2026-09-08 01:51:00,HIST-00088,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-b
+2026-09-08 06:41:00,HIST-00089,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,action_needed,sre-oncall-b
+2026-09-08 07:41:00,HIST-00090,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-c
+2026-09-08 13:10:00,HIST-00091,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-e
+2026-09-08 23:37:00,HIST-00092,Downstream API dependency latency increased by 300%.,Slowdown,action_needed,sre-oncall-a
+2026-09-09 05:13:00,HIST-00093,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-c
+2026-09-09 05:59:00,HIST-00094,Process crashed due to out-of-memory exception.,Availability,no_action_needed,sre-oncall-c
+2026-09-09 07:41:00,HIST-00095,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-c
+2026-09-09 08:33:00,HIST-00096,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-b
+2026-09-09 09:40:00,HIST-00097,Disk space capacity remaining less than 5% on /var/log.,Resource,action_needed,sre-oncall-d
+2026-09-09 13:02:00,HIST-00098,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-e
+2026-09-09 13:46:00,HIST-00099,NullPointerException in transaction settlement controller.,Error,action_needed,sre-oncall-b
+2026-09-09 15:00:00,HIST-00100,Thread pool capacity exhausted for HTTP workers.,Resource,no_action_needed,sre-oncall-c
+2026-09-09 15:26:00,HIST-00101,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,no_action_needed,sre-oncall-c
+2026-09-09 15:33:00,HIST-00102,NullPointerException in transaction settlement controller.,Error,action_needed,sre-oncall-b
+2026-09-09 16:33:00,HIST-00103,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-c
+2026-09-09 18:12:00,HIST-00104,Database read locking contention on index scan.,Slowdown,no_action_needed,sre-oncall-c
+2026-09-09 20:29:00,HIST-00105,Disk space capacity remaining less than 5% on /var/log.,Resource,action_needed,sre-oncall-b
+2026-09-09 21:20:00,HIST-00106,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-c
+2026-09-09 21:28:00,HIST-00107,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-a
+2026-09-10 00:27:00,HIST-00108,Log pattern search matched critical exception keyword frequency.,Custom Alert,action_needed,sre-oncall-e
+2026-09-10 03:39:00,HIST-00109,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-c
+2026-09-10 05:15:00,HIST-00110,Network interface packet loss exceeded 85%.,Availability,no_action_needed,sre-oncall-c
+2026-09-10 05:23:00,HIST-00111,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-a
+2026-09-10 06:43:00,HIST-00112,Database read locking contention on index scan.,Slowdown,no_action_needed,sre-oncall-b
+2026-09-10 07:27:00,HIST-00113,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-d
+2026-09-10 07:42:00,HIST-00114,Database read locking contention on index scan.,Slowdown,action_needed,sre-oncall-e
+2026-09-10 08:24:00,HIST-00115,Database connection pool exhausted. SocketTimeoutException.,Error,action_needed,sre-oncall-d
+2026-09-10 11:09:00,HIST-00116,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-b
+2026-09-10 11:45:00,HIST-00117,Database connection pool exhausted. SocketTimeoutException.,Error,no_action_needed,sre-oncall-d
+2026-09-10 17:19:00,HIST-00118,Docker container killed unexpectedly by OOM killer.,Availability,action_needed,sre-oncall-b
+2026-09-10 19:39:00,HIST-00119,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-a
+2026-09-10 20:18:00,HIST-00120,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-a
+2026-09-10 22:56:00,HIST-00121,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-c
+2026-09-11 01:39:00,HIST-00122,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-e
+2026-09-11 04:20:00,HIST-00123,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-d
+2026-09-11 06:54:00,HIST-00124,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-c
+2026-09-11 08:13:00,HIST-00125,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-c
+2026-09-11 16:11:00,HIST-00126,NullPointerException in transaction settlement controller.,Error,action_needed,sre-oncall-e
+2026-09-11 21:12:00,HIST-00127,Invalid authentication signature validation failures spiked.,Error,action_needed,sre-oncall-d
+2026-09-11 23:06:00,HIST-00128,Database connection pool exhausted. SocketTimeoutException.,Error,action_needed,sre-oncall-a
+2026-09-12 02:26:00,HIST-00129,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-a
+2026-09-12 03:39:00,HIST-00130,Docker container killed unexpectedly by OOM killer.,Availability,action_needed,sre-oncall-d
+2026-09-12 05:18:00,HIST-00131,Health check endpoint timeout after 5000ms.,Availability,action_needed,sre-oncall-e
+2026-09-12 07:55:00,HIST-00132,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-b
+2026-09-12 09:50:00,HIST-00133,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-09-12 10:02:00,HIST-00134,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-c
+2026-09-12 12:34:00,HIST-00135,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-b
+2026-09-12 13:19:00,HIST-00136,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-d
+2026-09-12 14:43:00,HIST-00137,Invalid authentication signature validation failures spiked.,Error,no_action_needed,sre-oncall-d
+2026-09-12 15:48:00,HIST-00138,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-b
+2026-09-12 16:18:00,HIST-00139,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-e
+2026-09-12 18:05:00,HIST-00140,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-a
+2026-09-12 18:06:00,HIST-00141,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-e
+2026-09-12 21:26:00,HIST-00142,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-e
+2026-09-12 22:03:00,HIST-00143,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-b
+2026-09-13 00:45:00,HIST-00144,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-c
+2026-09-13 06:38:00,HIST-00145,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-09-13 06:49:00,HIST-00146,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-e
+2026-09-13 07:07:00,HIST-00147,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-b
+2026-09-13 08:07:00,HIST-00148,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-d
+2026-09-13 10:09:00,HIST-00149,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-09-13 11:04:00,HIST-00150,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-c
+2026-09-13 11:09:00,HIST-00151,Thread pool capacity exhausted for HTTP workers.,Resource,action_needed,sre-oncall-b
+2026-09-13 12:06:00,HIST-00152,Process crashed due to out-of-memory exception.,Availability,no_action_needed,sre-oncall-e
+2026-09-13 12:33:00,HIST-00153,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-d
+2026-09-13 13:39:00,HIST-00154,Health check endpoint timeout after 5000ms.,Availability,no_action_needed,sre-oncall-d
+2026-09-13 14:20:00,HIST-00155,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-a
+2026-09-13 14:22:00,HIST-00156,Invalid authentication signature validation failures spiked.,Error,action_needed,sre-oncall-c
+2026-09-13 18:04:00,HIST-00157,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-b
+2026-09-13 18:59:00,HIST-00158,Health check endpoint timeout after 5000ms.,Availability,no_action_needed,sre-oncall-c
+2026-09-13 22:49:00,HIST-00159,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-c
+2026-09-14 00:04:00,HIST-00160,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-e
+2026-09-14 11:10:00,HIST-00161,Database read locking contention on index scan.,Slowdown,action_needed,sre-oncall-d
+2026-09-14 11:39:00,HIST-00162,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-a
+2026-09-14 18:07:00,HIST-00163,Network interface packet loss exceeded 85%.,Availability,no_action_needed,sre-oncall-b
+2026-09-14 19:23:00,HIST-00164,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-e
+2026-09-14 20:52:00,HIST-00165,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-a
+2026-09-14 20:53:00,HIST-00166,Invalid authentication signature validation failures spiked.,Error,action_needed,sre-oncall-b
+2026-09-14 22:19:00,HIST-00167,Network interface packet loss exceeded 85%.,Availability,action_needed,sre-oncall-c
+2026-09-14 22:28:00,HIST-00168,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-c
+2026-09-15 01:04:00,HIST-00169,Database connection pool exhausted. SocketTimeoutException.,Error,action_needed,sre-oncall-e
+2026-09-15 03:55:00,HIST-00170,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-d
+2026-09-15 05:13:00,HIST-00171,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,action_needed,sre-oncall-c
+2026-09-15 08:22:00,HIST-00172,NullPointerException in transaction settlement controller.,Error,action_needed,sre-oncall-e
+2026-09-15 09:01:00,HIST-00173,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-b
+2026-09-15 11:00:00,HIST-00174,Memory usage reached critical threshold of 96%.,Resource,action_needed,sre-oncall-b
+2026-09-15 12:19:00,HIST-00175,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-a
+2026-09-15 15:48:00,HIST-00176,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-d
+2026-09-15 17:28:00,HIST-00177,Database connection pool exhausted. SocketTimeoutException.,Error,no_action_needed,sre-oncall-c
+2026-09-15 19:34:00,HIST-00178,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-a
+2026-09-16 00:21:00,HIST-00179,Database connection pool exhausted. SocketTimeoutException.,Error,action_needed,sre-oncall-c
+2026-09-16 01:30:00,HIST-00180,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-e
+2026-09-16 03:41:00,HIST-00181,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-d
+2026-09-16 04:21:00,HIST-00182,Health check endpoint timeout after 5000ms.,Availability,no_action_needed,sre-oncall-c
+2026-09-16 05:54:00,HIST-00183,Database read locking contention on index scan.,Slowdown,no_action_needed,sre-oncall-b
+2026-09-16 13:08:00,HIST-00184,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-d
+2026-09-16 13:48:00,HIST-00185,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-d
+2026-09-16 14:45:00,HIST-00186,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-b
+2026-09-16 19:06:00,HIST-00187,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-09-17 01:58:00,HIST-00188,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-c
+2026-09-17 02:46:00,HIST-00189,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-09-17 04:08:00,HIST-00190,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-d
+2026-09-17 05:36:00,HIST-00191,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-a
+2026-09-17 06:27:00,HIST-00192,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-a
+2026-09-17 06:34:00,HIST-00193,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-c
+2026-09-17 08:28:00,HIST-00194,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-b
+2026-09-17 09:39:00,HIST-00195,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-a
+2026-09-17 10:24:00,HIST-00196,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-c
+2026-09-17 13:11:00,HIST-00197,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-e
+2026-09-17 14:08:00,HIST-00198,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-e
+2026-09-17 18:13:00,HIST-00199,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-e
+2026-09-17 19:19:00,HIST-00200,Health check endpoint timeout after 5000ms.,Availability,action_needed,sre-oncall-d
+2026-09-17 21:59:00,HIST-00201,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-b
+2026-09-17 22:53:00,HIST-00202,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-e
+2026-09-18 02:05:00,HIST-00203,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-e
+2026-09-18 02:10:00,HIST-00204,Thread pool capacity exhausted for HTTP workers.,Resource,action_needed,sre-oncall-c
+2026-09-18 03:17:00,HIST-00205,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-c
+2026-09-18 03:43:00,HIST-00206,Database connection pool exhausted. SocketTimeoutException.,Error,action_needed,sre-oncall-c
+2026-09-18 04:27:00,HIST-00207,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-c
+2026-09-18 08:33:00,HIST-00208,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-e
+2026-09-18 09:06:00,HIST-00209,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,action_needed,sre-oncall-d
+2026-09-18 09:43:00,HIST-00210,Health check endpoint timeout after 5000ms.,Availability,no_action_needed,sre-oncall-b
+2026-09-18 11:52:00,HIST-00211,Network interface packet loss exceeded 85%.,Availability,action_needed,sre-oncall-c
+2026-09-18 12:29:00,HIST-00212,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,action_needed,sre-oncall-e
+2026-09-18 16:01:00,HIST-00213,NullPointerException in transaction settlement controller.,Error,action_needed,sre-oncall-e
+2026-09-18 16:16:00,HIST-00214,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,action_needed,sre-oncall-e
+2026-09-18 17:16:00,HIST-00215,Thread pool capacity exhausted for HTTP workers.,Resource,action_needed,sre-oncall-b
+2026-09-18 17:32:00,HIST-00216,Invalid authentication signature validation failures spiked.,Error,action_needed,sre-oncall-d
+2026-09-18 18:07:00,HIST-00217,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-09-18 18:13:00,HIST-00218,Disk space capacity remaining less than 5% on /var/log.,Resource,action_needed,sre-oncall-c
+2026-09-18 21:11:00,HIST-00219,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-b
+2026-09-18 22:36:00,HIST-00220,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-a
+2026-09-18 22:39:00,HIST-00221,Disk space capacity remaining less than 5% on /var/log.,Resource,action_needed,sre-oncall-e
+2026-09-19 01:54:00,HIST-00222,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-e
+2026-09-19 04:16:00,HIST-00223,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-b
+2026-09-19 05:04:00,HIST-00224,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-b
+2026-09-19 05:08:00,HIST-00225,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-d
+2026-09-19 07:23:00,HIST-00226,Database read locking contention on index scan.,Slowdown,no_action_needed,sre-oncall-d
+2026-09-19 07:34:00,HIST-00227,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-b
+2026-09-19 07:45:00,HIST-00228,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-09-19 08:34:00,HIST-00229,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-e
+2026-09-19 10:41:00,HIST-00230,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-e
+2026-09-19 10:42:00,HIST-00231,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-e
+2026-09-19 15:40:00,HIST-00232,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-b
+2026-09-19 16:29:00,HIST-00233,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-c
+2026-09-19 18:01:00,HIST-00234,Database read locking contention on index scan.,Slowdown,no_action_needed,sre-oncall-b
+2026-09-19 18:10:00,HIST-00235,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-d
+2026-09-19 20:49:00,HIST-00236,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-e
+2026-09-19 22:08:00,HIST-00237,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-c
+2026-09-19 23:38:00,HIST-00238,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-b
+2026-09-20 03:34:00,HIST-00239,Database connection pool exhausted. SocketTimeoutException.,Error,action_needed,sre-oncall-a
+2026-09-20 04:17:00,HIST-00240,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-b
+2026-09-20 05:16:00,HIST-00241,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-d
+2026-09-20 08:09:00,HIST-00242,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-c
+2026-09-20 08:25:00,HIST-00243,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-a
+2026-09-20 13:47:00,HIST-00244,Thread pool capacity exhausted for HTTP workers.,Resource,no_action_needed,sre-oncall-b
+2026-09-20 14:29:00,HIST-00245,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-d
+2026-09-20 16:32:00,HIST-00246,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-c
+2026-09-20 18:54:00,HIST-00247,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,action_needed,sre-oncall-d
+2026-09-20 19:45:00,HIST-00248,Database connection pool exhausted. SocketTimeoutException.,Error,no_action_needed,sre-oncall-d
+2026-09-21 01:34:00,HIST-00249,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-d
+2026-09-21 02:42:00,HIST-00250,Network interface packet loss exceeded 85%.,Availability,no_action_needed,sre-oncall-b
+2026-09-21 08:34:00,HIST-00251,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-e
+2026-09-21 11:17:00,HIST-00252,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-c
+2026-09-21 13:14:00,HIST-00253,Database connection pool exhausted. SocketTimeoutException.,Error,action_needed,sre-oncall-d
+2026-09-21 14:47:00,HIST-00254,Thread pool capacity exhausted for HTTP workers.,Resource,action_needed,sre-oncall-e
+2026-09-21 16:16:00,HIST-00255,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-b
+2026-09-21 16:17:00,HIST-00256,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,action_needed,sre-oncall-c
+2026-09-21 17:19:00,HIST-00257,Database read locking contention on index scan.,Slowdown,no_action_needed,sre-oncall-a
+2026-09-21 21:25:00,HIST-00258,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-c
+2026-09-22 01:18:00,HIST-00259,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-a
+2026-09-22 02:16:00,HIST-00260,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-d
+2026-09-22 03:50:00,HIST-00261,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-b
+2026-09-22 04:49:00,HIST-00262,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-b
+2026-09-22 06:02:00,HIST-00263,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-c
+2026-09-22 06:21:00,HIST-00264,Health check endpoint timeout after 5000ms.,Availability,no_action_needed,sre-oncall-d
+2026-09-22 09:16:00,HIST-00265,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-e
+2026-09-22 11:27:00,HIST-00266,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-b
+2026-09-22 12:10:00,HIST-00267,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-b
+2026-09-22 15:39:00,HIST-00268,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-b
+2026-09-22 16:30:00,HIST-00269,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-a
+2026-09-22 19:31:00,HIST-00270,Database connection pool exhausted. SocketTimeoutException.,Error,action_needed,sre-oncall-e
+2026-09-22 20:23:00,HIST-00271,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-a
+2026-09-22 22:33:00,HIST-00272,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-d
+2026-09-22 23:22:00,HIST-00273,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-09-23 00:21:00,HIST-00274,Thread pool capacity exhausted for HTTP workers.,Resource,action_needed,sre-oncall-b
+2026-09-23 01:35:00,HIST-00275,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-d
+2026-09-23 04:25:00,HIST-00276,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-b
+2026-09-23 06:07:00,HIST-00277,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-e
+2026-09-23 07:55:00,HIST-00278,Memory usage reached critical threshold of 96%.,Resource,action_needed,sre-oncall-c
+2026-09-23 08:23:00,HIST-00279,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-b
+2026-09-23 10:23:00,HIST-00280,Database connection pool exhausted. SocketTimeoutException.,Error,no_action_needed,sre-oncall-d
+2026-09-23 10:31:00,HIST-00281,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-d
+2026-09-23 12:09:00,HIST-00282,Health check endpoint timeout after 5000ms.,Availability,no_action_needed,sre-oncall-e
+2026-09-23 13:16:00,HIST-00283,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-09-23 14:16:00,HIST-00284,Database connection pool exhausted. SocketTimeoutException.,Error,no_action_needed,sre-oncall-a
+2026-09-23 14:42:00,HIST-00285,Docker container killed unexpectedly by OOM killer.,Availability,action_needed,sre-oncall-e
+2026-09-23 16:24:00,HIST-00286,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-d
+2026-09-23 18:01:00,HIST-00287,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,no_action_needed,sre-oncall-a
+2026-09-23 21:36:00,HIST-00288,Invalid authentication signature validation failures spiked.,Error,no_action_needed,sre-oncall-d
+2026-09-23 22:11:00,HIST-00289,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-c
+2026-09-24 00:20:00,HIST-00290,Database connection pool exhausted. SocketTimeoutException.,Error,action_needed,sre-oncall-c
+2026-09-24 02:40:00,HIST-00291,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-e
+2026-09-24 05:39:00,HIST-00292,Network interface packet loss exceeded 85%.,Availability,no_action_needed,sre-oncall-c
+2026-09-24 07:51:00,HIST-00293,Database read locking contention on index scan.,Slowdown,action_needed,sre-oncall-c
+2026-09-24 09:08:00,HIST-00294,NullPointerException in transaction settlement controller.,Error,action_needed,sre-oncall-a
+2026-09-24 10:00:00,HIST-00295,Invalid authentication signature validation failures spiked.,Error,no_action_needed,sre-oncall-e
+2026-09-24 12:10:00,HIST-00296,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-e
+2026-09-24 14:46:00,HIST-00297,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-c
+2026-09-24 15:57:00,HIST-00298,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,action_needed,sre-oncall-c
+2026-09-24 16:43:00,HIST-00299,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-a
+2026-09-24 19:01:00,HIST-00300,Network interface packet loss exceeded 85%.,Availability,no_action_needed,sre-oncall-e
+2026-09-25 01:02:00,HIST-00301,Health check endpoint timeout after 5000ms.,Availability,no_action_needed,sre-oncall-a
+2026-09-25 04:44:00,HIST-00302,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-b
+2026-09-25 07:16:00,HIST-00303,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-e
+2026-09-25 09:48:00,HIST-00304,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-d
+2026-09-25 11:11:00,HIST-00305,Database connection pool exhausted. SocketTimeoutException.,Error,action_needed,sre-oncall-d
+2026-09-25 12:33:00,HIST-00306,Docker container killed unexpectedly by OOM killer.,Availability,action_needed,sre-oncall-e
+2026-09-25 12:44:00,HIST-00307,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-a
+2026-09-25 13:29:00,HIST-00308,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-e
+2026-09-25 15:17:00,HIST-00309,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-e
+2026-09-25 15:37:00,HIST-00310,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-a
+2026-09-25 15:57:00,HIST-00311,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-a
+2026-09-25 17:02:00,HIST-00312,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-b
+2026-09-25 17:21:00,HIST-00313,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-b
+2026-09-25 17:30:00,HIST-00314,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-d
+2026-09-25 18:22:00,HIST-00315,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-e
+2026-09-25 20:28:00,HIST-00316,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-a
+2026-09-25 21:16:00,HIST-00317,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-e
+2026-09-26 02:07:00,HIST-00318,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,action_needed,sre-oncall-a
+2026-09-26 02:35:00,HIST-00319,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-b
+2026-09-26 06:50:00,HIST-00320,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-09-26 07:23:00,HIST-00321,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-d
+2026-09-26 10:19:00,HIST-00322,Health check endpoint timeout after 5000ms.,Availability,no_action_needed,sre-oncall-e
+2026-09-26 11:25:00,HIST-00323,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-d
+2026-09-26 14:48:00,HIST-00324,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-a
+2026-09-26 16:09:00,HIST-00325,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-a
+2026-09-26 16:53:00,HIST-00326,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-c
+2026-09-26 18:29:00,HIST-00327,Health check endpoint timeout after 5000ms.,Availability,action_needed,sre-oncall-c
+2026-09-26 19:43:00,HIST-00328,Invalid authentication signature validation failures spiked.,Error,action_needed,sre-oncall-b
+2026-09-26 19:49:00,HIST-00329,Process crashed due to out-of-memory exception.,Availability,action_needed,sre-oncall-b
+2026-09-26 21:01:00,HIST-00330,Health check endpoint timeout after 5000ms.,Availability,no_action_needed,sre-oncall-c
+2026-09-26 21:13:00,HIST-00331,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-b
+2026-09-26 21:17:00,HIST-00332,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-e
+2026-09-26 21:51:00,HIST-00333,Docker container killed unexpectedly by OOM killer.,Availability,action_needed,sre-oncall-e
+2026-09-27 00:38:00,HIST-00334,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-a
+2026-09-27 01:39:00,HIST-00335,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-d
+2026-09-27 01:51:00,HIST-00336,Invalid authentication signature validation failures spiked.,Error,action_needed,sre-oncall-d
+2026-09-27 12:30:00,HIST-00337,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-a
+2026-09-27 12:54:00,HIST-00338,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,action_needed,sre-oncall-b
+2026-09-27 14:46:00,HIST-00339,Network interface packet loss exceeded 85%.,Availability,no_action_needed,sre-oncall-b
+2026-09-27 15:51:00,HIST-00340,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-b
+2026-09-27 16:40:00,HIST-00341,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-09-27 16:45:00,HIST-00342,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-e
+2026-09-27 20:19:00,HIST-00343,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-c
+2026-09-27 21:41:00,HIST-00344,Database read locking contention on index scan.,Slowdown,no_action_needed,sre-oncall-b
+2026-09-28 00:06:00,HIST-00345,Health check endpoint timeout after 5000ms.,Availability,no_action_needed,sre-oncall-a
+2026-09-28 08:22:00,HIST-00346,Health check endpoint timeout after 5000ms.,Availability,no_action_needed,sre-oncall-a
+2026-09-28 16:25:00,HIST-00347,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-d
+2026-09-28 16:45:00,HIST-00348,Network interface packet loss exceeded 85%.,Availability,no_action_needed,sre-oncall-c
+2026-09-28 19:15:00,HIST-00349,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-b
+2026-09-28 20:28:00,HIST-00350,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-b
+2026-09-28 23:12:00,HIST-00351,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-d
+2026-09-29 00:36:00,HIST-00352,Process crashed due to out-of-memory exception.,Availability,no_action_needed,sre-oncall-b
+2026-09-29 01:07:00,HIST-00353,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-d
+2026-09-29 02:54:00,HIST-00354,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-c
+2026-09-29 04:39:00,HIST-00355,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-e
+2026-09-29 06:05:00,HIST-00356,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-e
+2026-09-29 06:55:00,HIST-00357,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-d
+2026-09-29 08:31:00,HIST-00358,Network interface packet loss exceeded 85%.,Availability,no_action_needed,sre-oncall-b
+2026-09-29 08:37:00,HIST-00359,Network interface packet loss exceeded 85%.,Availability,no_action_needed,sre-oncall-e
+2026-09-29 09:15:00,HIST-00360,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-e
+2026-09-29 11:15:00,HIST-00361,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-a
+2026-09-29 14:37:00,HIST-00362,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-e
+2026-09-29 15:00:00,HIST-00363,Database read locking contention on index scan.,Slowdown,action_needed,sre-oncall-b
+2026-09-29 16:05:00,HIST-00364,Health check endpoint timeout after 5000ms.,Availability,no_action_needed,sre-oncall-c
+2026-09-29 18:44:00,HIST-00365,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-a
+2026-09-29 18:52:00,HIST-00366,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-d
+2026-09-29 21:17:00,HIST-00367,Database read locking contention on index scan.,Slowdown,no_action_needed,sre-oncall-a
+2026-09-29 21:20:00,HIST-00368,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-c
+2026-09-29 22:00:00,HIST-00369,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-e
+2026-09-29 22:52:00,HIST-00370,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-a
+2026-09-30 02:36:00,HIST-00371,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-d
+2026-09-30 03:24:00,HIST-00372,Memory usage reached critical threshold of 96%.,Resource,action_needed,sre-oncall-a
+2026-09-30 08:28:00,HIST-00373,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-c
+2026-09-30 09:52:00,HIST-00374,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-09-30 13:07:00,HIST-00375,Process crashed due to out-of-memory exception.,Availability,action_needed,sre-oncall-b
+2026-09-30 13:44:00,HIST-00376,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,action_needed,sre-oncall-c
+2026-09-30 17:36:00,HIST-00377,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-a
+2026-09-30 23:07:00,HIST-00378,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-d
+2026-10-01 00:38:00,HIST-00379,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-b
+2026-10-01 03:11:00,HIST-00380,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-c
+2026-10-01 03:34:00,HIST-00381,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-10-01 07:20:00,HIST-00382,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-d
+2026-10-01 09:24:00,HIST-00383,Database connection pool exhausted. SocketTimeoutException.,Error,no_action_needed,sre-oncall-a
+2026-10-01 10:06:00,HIST-00384,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-a
+2026-10-01 13:14:00,HIST-00385,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-e
+2026-10-01 15:01:00,HIST-00386,Thread pool capacity exhausted for HTTP workers.,Resource,no_action_needed,sre-oncall-a
+2026-10-01 21:58:00,HIST-00387,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,action_needed,sre-oncall-a
+2026-10-01 23:47:00,HIST-00388,Database connection pool exhausted. SocketTimeoutException.,Error,action_needed,sre-oncall-a
+2026-10-02 03:28:00,HIST-00389,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,action_needed,sre-oncall-c
+2026-10-02 03:38:00,HIST-00390,Thread pool capacity exhausted for HTTP workers.,Resource,no_action_needed,sre-oncall-d
+2026-10-02 04:56:00,HIST-00391,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-a
+2026-10-02 06:26:00,HIST-00392,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-d
+2026-10-02 08:38:00,HIST-00393,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-b
+2026-10-02 08:58:00,HIST-00394,Process crashed due to out-of-memory exception.,Availability,no_action_needed,sre-oncall-d
+2026-10-02 11:08:00,HIST-00395,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-c
+2026-10-02 13:25:00,HIST-00396,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-e
+2026-10-02 14:02:00,HIST-00397,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-e
+2026-10-02 21:57:00,HIST-00398,Network interface packet loss exceeded 85%.,Availability,no_action_needed,sre-oncall-d
+2026-10-02 22:05:00,HIST-00399,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-c
+2026-10-03 01:52:00,HIST-00400,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-d
+2026-10-03 04:02:00,HIST-00401,Thread pool capacity exhausted for HTTP workers.,Resource,action_needed,sre-oncall-b
+2026-10-03 04:32:00,HIST-00402,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-a
+2026-10-03 06:00:00,HIST-00403,ActiveGate heartbeat missing for more than 5 minutes.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-10-03 10:01:00,HIST-00404,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-a
+2026-10-03 12:07:00,HIST-00405,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-d
+2026-10-03 15:54:00,HIST-00406,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-e
+2026-10-03 18:35:00,HIST-00407,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-c
+2026-10-03 20:28:00,HIST-00408,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-b
+2026-10-03 21:01:00,HIST-00409,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-d
+2026-10-03 23:51:00,HIST-00410,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-a
+2026-10-04 00:25:00,HIST-00411,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-d
+2026-10-04 05:07:00,HIST-00412,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,action_needed,sre-oncall-b
+2026-10-04 06:19:00,HIST-00413,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-e
+2026-10-04 06:42:00,HIST-00414,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-a
+2026-10-04 07:32:00,HIST-00415,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-c
+2026-10-04 10:02:00,HIST-00416,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-d
+2026-10-04 13:05:00,HIST-00417,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-b
+2026-10-04 14:05:00,HIST-00418,Thread pool capacity exhausted for HTTP workers.,Resource,no_action_needed,sre-oncall-b
+2026-10-04 17:07:00,HIST-00419,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-c
+2026-10-04 20:30:00,HIST-00420,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-b
+2026-10-04 23:30:00,HIST-00421,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-a
+2026-10-05 00:44:00,HIST-00422,Network interface packet loss exceeded 85%.,Availability,no_action_needed,sre-oncall-a
+2026-10-05 02:54:00,HIST-00423,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-c
+2026-10-05 06:37:00,HIST-00424,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-e
+2026-10-05 07:42:00,HIST-00425,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-e
+2026-10-05 08:15:00,HIST-00426,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-b
+2026-10-05 09:06:00,HIST-00427,Database connection pool exhausted. SocketTimeoutException.,Error,action_needed,sre-oncall-b
+2026-10-05 09:12:00,HIST-00428,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-e
+2026-10-05 09:58:00,HIST-00429,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-b
+2026-10-05 13:00:00,HIST-00430,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-b
+2026-10-05 15:45:00,HIST-00431,Process crashed due to out-of-memory exception.,Availability,no_action_needed,sre-oncall-b
+2026-10-05 18:39:00,HIST-00432,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-c
+2026-10-05 19:50:00,HIST-00433,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-b
+2026-10-05 19:53:00,HIST-00434,Process crashed due to out-of-memory exception.,Availability,action_needed,sre-oncall-e
+2026-10-05 19:54:00,HIST-00435,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-a
+2026-10-05 23:53:00,HIST-00436,Process crashed due to out-of-memory exception.,Availability,no_action_needed,sre-oncall-d
+2026-10-06 00:31:00,HIST-00437,Thread pool capacity exhausted for HTTP workers.,Resource,no_action_needed,sre-oncall-d
+2026-10-06 02:52:00,HIST-00438,Network interface packet loss exceeded 85%.,Availability,action_needed,sre-oncall-d
+2026-10-06 07:03:00,HIST-00439,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-c
+2026-10-06 09:26:00,HIST-00440,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-a
+2026-10-06 09:46:00,HIST-00441,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-d
+2026-10-06 09:54:00,HIST-00442,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-d
+2026-10-06 10:47:00,HIST-00443,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-a
+2026-10-06 11:11:00,HIST-00444,Database connection pool exhausted. SocketTimeoutException.,Error,action_needed,sre-oncall-a
+2026-10-06 12:25:00,HIST-00445,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-b
+2026-10-06 13:26:00,HIST-00446,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,no_action_needed,sre-oncall-d
+2026-10-06 15:14:00,HIST-00447,Network interface packet loss exceeded 85%.,Availability,no_action_needed,sre-oncall-c
+2026-10-06 20:10:00,HIST-00448,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,no_action_needed,sre-oncall-d
+2026-10-06 20:21:00,HIST-00449,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,action_needed,sre-oncall-b
+2026-10-06 21:51:00,HIST-00450,Database connection pool exhausted. SocketTimeoutException.,Error,no_action_needed,sre-oncall-d
+2026-10-06 22:08:00,HIST-00451,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-b
+2026-10-06 23:43:00,HIST-00452,Log pattern search matched critical exception keyword frequency.,Custom Alert,action_needed,sre-oncall-b
+2026-10-06 23:45:00,HIST-00453,Log pattern search matched critical exception keyword frequency.,Custom Alert,action_needed,sre-oncall-c
+2026-10-07 00:32:00,HIST-00454,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-b
+2026-10-07 07:16:00,HIST-00455,Process crashed due to out-of-memory exception.,Availability,no_action_needed,sre-oncall-c
+2026-10-07 08:33:00,HIST-00456,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-b
+2026-10-07 09:59:00,HIST-00457,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-d
+2026-10-07 10:14:00,HIST-00458,Health check endpoint timeout after 5000ms.,Availability,action_needed,sre-oncall-c
+2026-10-07 10:15:00,HIST-00459,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-a
+2026-10-07 11:40:00,HIST-00460,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,action_needed,sre-oncall-d
+2026-10-07 13:10:00,HIST-00461,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,action_needed,sre-oncall-a
+2026-10-07 13:32:00,HIST-00462,Docker container killed unexpectedly by OOM killer.,Availability,action_needed,sre-oncall-a
+2026-10-07 15:02:00,HIST-00463,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-e
+2026-10-07 16:15:00,HIST-00464,Process crashed due to out-of-memory exception.,Availability,no_action_needed,sre-oncall-a
+2026-10-07 20:55:00,HIST-00465,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-d
+2026-10-08 03:33:00,HIST-00466,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-b
+2026-10-08 04:02:00,HIST-00467,Database read locking contention on index scan.,Slowdown,no_action_needed,sre-oncall-a
+2026-10-08 04:31:00,HIST-00468,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-c
+2026-10-08 05:15:00,HIST-00469,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-b
+2026-10-08 05:17:00,HIST-00470,Thread pool capacity exhausted for HTTP workers.,Resource,no_action_needed,sre-oncall-c
+2026-10-08 07:16:00,HIST-00471,NullPointerException in transaction settlement controller.,Error,action_needed,sre-oncall-e
+2026-10-08 11:12:00,HIST-00472,Garbage Collection (GC) pause duration exceeded 4.2 seconds.,Slowdown,no_action_needed,sre-oncall-e
+2026-10-08 11:43:00,HIST-00473,Docker container killed unexpectedly by OOM killer.,Availability,action_needed,sre-oncall-d
+2026-10-08 12:27:00,HIST-00474,Thread pool capacity exhausted for HTTP workers.,Resource,no_action_needed,sre-oncall-c
+2026-10-08 13:19:00,HIST-00475,OpenPipeline processing latency exceeded baseline by 50ms.,Custom Alert,no_action_needed,sre-oncall-b
+2026-10-08 16:58:00,HIST-00476,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-c
+2026-10-08 17:11:00,HIST-00477,Downstream API dependency latency increased by 300%.,Slowdown,no_action_needed,sre-oncall-e
+2026-10-08 19:40:00,HIST-00478,Memory usage reached critical threshold of 96%.,Resource,no_action_needed,sre-oncall-b
+2026-10-08 19:46:00,HIST-00479,Process crashed due to out-of-memory exception.,Availability,action_needed,sre-oncall-c
+2026-10-08 20:46:00,HIST-00480,Database read locking contention on index scan.,Slowdown,action_needed,sre-oncall-c
+2026-10-09 01:30:00,HIST-00481,Database read locking contention on index scan.,Slowdown,action_needed,sre-oncall-c
+2026-10-09 03:13:00,HIST-00482,Disk space capacity remaining less than 5% on /var/log.,Resource,action_needed,sre-oncall-d
+2026-10-09 07:34:00,HIST-00483,OneAgent lost connection to Dynatrace Cluster Security Gateway.,Monitoring Unavailable,action_needed,sre-oncall-d
+2026-10-09 10:17:00,HIST-00484,Docker container killed unexpectedly by OOM killer.,Availability,no_action_needed,sre-oncall-e
+2026-10-09 10:25:00,HIST-00485,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-b
+2026-10-09 11:23:00,HIST-00486,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-e
+2026-10-09 12:15:00,HIST-00487,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-b
+2026-10-09 12:41:00,HIST-00488,HTTP 500 Internal Server Error rate spiked to 12.5%.,Error,no_action_needed,sre-oncall-a
+2026-10-09 13:29:00,HIST-00489,Thread pool capacity exhausted for HTTP workers.,Resource,action_needed,sre-oncall-b
+2026-10-09 17:16:00,HIST-00490,Disk space capacity remaining less than 5% on /var/log.,Resource,no_action_needed,sre-oncall-e
+2026-10-09 21:56:00,HIST-00491,Host telemetry reporting stream interrupted.,Monitoring Unavailable,no_action_needed,sre-oncall-b
+2026-10-09 22:44:00,HIST-00492,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-e
+2026-10-09 23:00:00,HIST-00493,Database read locking contention on index scan.,Slowdown,action_needed,sre-oncall-e
+2026-10-10 05:01:00,HIST-00494,Database read locking contention on index scan.,Slowdown,no_action_needed,sre-oncall-b
+2026-10-10 08:10:00,HIST-00495,Log pattern search matched critical exception keyword frequency.,Custom Alert,no_action_needed,sre-oncall-b
+2026-10-10 08:22:00,HIST-00496,Response time P95 degraded from 250ms to 3200ms.,Slowdown,no_action_needed,sre-oncall-d
+2026-10-10 10:04:00,HIST-00497,CPU usage saturation sustained at 98.4% for 15 mins.,Resource,no_action_needed,sre-oncall-a
+2026-10-10 13:26:00,HIST-00498,Database read locking contention on index scan.,Slowdown,action_needed,sre-oncall-b
+2026-10-10 15:28:00,HIST-00499,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,action_needed,sre-oncall-a
+2026-10-10 18:41:00,HIST-00500,Prometheus metric queue_depth exceeded threshold > 500.,Custom Alert,no_action_needed,sre-oncall-c
