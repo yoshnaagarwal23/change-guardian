@@ -22,6 +22,8 @@ from alert_trust import ACTION, NO_ACTION, badge, disposition, load_history, tru
 from guardrails import AuditLog  # noqa: E402
 from kpis import compute_kpis  # noqa: E402
 from llm import get_backend  # noqa: E402
+from notify import send_risk_alert  # noqa: E402
+from predeploy_risk import label_culprits, llm_summary, load_inputs, score_all  # noqa: E402
 from tools import CHANGES, TriageTools  # noqa: E402
 
 AUDIT = Path("outputs/audit_log.jsonl")
@@ -74,6 +76,14 @@ def current_trust() -> pd.DataFrame:
 def batch_cards() -> list[dict]:
     rules = TriageAgent(load_tools())
     return [rules.triage(p) for p in load_tools().problems["problem_id"]]
+
+
+@st.cache_data(show_spinner="Scoring pending changes…")
+def pending_scores() -> list[dict]:
+    pending, tiers, freezes = load_inputs()
+    if pending.empty:
+        return []
+    return score_all(pending, tiers, freezes, label_culprits(load_tools()))
 
 
 tools = load_tools()
@@ -135,7 +145,7 @@ with k4:
     sui.metric_card("Decisions logged", len(log.entries()),
                     description="hash chain verified" if log.verify() else "chain broken", key="m4")
 
-tab = sui.tabs(["Triage", "Insights", "Alert Trust", "Audit trail"], value="Triage", key="tabs")
+tab = sui.tabs(["Triage", "Insights", "Alert Trust", "Pending Changes", "Audit trail"], value="Triage", key="tabs")
 
 # ----------------------------------------------------------------------------- triage
 if tab == "Triage":
@@ -358,6 +368,87 @@ elif tab == "Alert Trust":
                      column_config={"% no action": st.column_config.NumberColumn(format="%d%%"),
                                     "Trust": st.column_config.NumberColumn(format="%d%%")})
 
+# ----------------------------------------------------------------------------- pending changes
+elif tab == "Pending Changes":
+    scored = pending_scores()
+    st.html(ui.banner("Recommendation only: Change Guardian never deploys or blocks a change. A human can "
+                      "always approve with a justification, and every override is audited.", "warn", "circle-check"))
+    if not scored:
+        st.info("Run `uv run python scripts/make_pending_changes.py` to create the demo pending changes.")
+        st.stop()
+    st.html(ui.chip("demo pending changes · invented", "muted", "triangle-exclamation"))
+    overrides = st.session_state.setdefault("overrides", {})
+
+    # Webhook for HIGH changes, once per change per session; never raises.
+    alerted = st.session_state.setdefault("risk_alerts", {})
+    for c in scored:
+        if c["level"] == "HIGH" and c["change_id"] not in alerted:
+            alerted[c["change_id"]] = send_risk_alert(c["change_id"], c["entity"], c["owner"], c["risk_score"],
+                                                      c["level"], c["reasons"])[1]
+    if alerted:
+        st.caption(f"Risk webhook · {len(alerted)} HIGH change(s): {next(iter(alerted.values()))}")
+
+    def status(c: dict) -> str:
+        if c["change_id"] in overrides:
+            return f"Approved by {overrides[c['change_id']]['user']} (override)"
+        return f"Awaiting {c['gate']['approver']} approval" if c["gate"]["blocked"] else c["gate"]["label"]
+
+    view = pd.DataFrame({"Change": [c["change_id"] for c in scored], "Entity": [c["entity"] for c in scored],
+                         "Planned": [c["planned_time"].strftime("%a %m-%d %H:%M") for c in scored],
+                         "Score": [c["risk_score"] for c in scored], "Level": [c["level"] for c in scored],
+                         "Freeze": ["❄ " + c["freeze"] if c["freeze"] else "" for c in scored],
+                         "Gate": [c["gate"]["label"] for c in scored], "Status": [status(c) for c in scored]})
+    st.dataframe(view.style.map(lambda v: f"color:{ {'HIGH': ui.RED, 'MEDIUM': ui.AMBER, 'LOW': ui.GREEN}[v]};"
+                                          "font-weight:600", subset=["Level"]),
+                 hide_index=True, width="stretch",
+                 column_config={"Score": st.column_config.NumberColumn(format="%.2f")})
+
+    summaries = st.session_state.setdefault("risk_summaries", {})
+    for c in scored:
+        with st.expander(f"{c['change_id']} · {c['level']} {c['risk_score']:.2f} · {c['entity']} · "
+                         f"{c['description']}"):
+            chips = [ui.gate_badge(c["level"], c["risk_score"]), ui.chip(c["gate"]["label"], "muted"),
+                     ui.chip(f"owner {c['owner']}", "", "user-shield", mono=True)]
+            if c["freeze"]:
+                chips.append(ui.chip(f"freeze · {c['freeze']}", "low", "lock"))
+            if c["off_hours"]:
+                chips.append(ui.chip(c["off_hours"], "high", "clock-rotate-left"))
+            st.html(f'<div class="cg-chips">{"".join(chips)}</div>')
+
+            st.html(ui.eyebrow("Why · each signal's contribution to the score", "list-check"))
+            contrib = [x for x in c["contributions"] if x["contribution"]][::-1]
+            fig = go.Figure(go.Bar(x=[x["contribution"] for x in contrib], y=[x["signal"] for x in contrib],
+                                   orientation="h", text=[x["reason"] for x in contrib], textposition="auto",
+                                   marker=dict(color=[ui.RED if x["contribution"] > 0 else ui.GREEN for x in contrib])))
+            fig.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                              font=dict(family="Inter", color="#C9D4DE"), margin=dict(l=10, r=10, t=10, b=10),
+                              height=40 + 32 * len(contrib), xaxis=dict(zeroline=True, zerolinecolor="#2B3B4C"))
+            st.plotly_chart(fig, width="stretch", key=f"why-{c['change_id']}")
+
+            key = (c["change_id"], getattr(backend, "name", None))
+            if backend is None:
+                st.caption("Pick a model engine in the sidebar for a plain-English summary (score is unaffected).")
+            elif key in summaries:
+                st.info(summaries[key])
+            elif st.button("Summarize with model", key=f"sum-{c['change_id']}"):
+                summaries[key] = llm_summary(backend, c)
+                st.rerun()
+
+            if c["change_id"] in overrides:
+                o = overrides[c["change_id"]]
+                st.caption(f"Approved by {o['user']} · “{o['justification']}” · hash {o['hash'][:10]}…")
+            else:
+                why = st.text_input("Justification", key=f"just-{c['change_id']}",
+                                    placeholder="Why is it safe to land anyway?")
+                if st.button("Approve with justification", key=f"ov-{c['change_id']}", disabled=not why.strip()):
+                    rec = AuditLog(AUDIT).append({"change_id": c["change_id"], "decision": "override_approved",
+                                                  "user": reviewer, "backend": "rules", "risk_score": c["risk_score"],
+                                                  "level": c["level"], "gate": c["gate"]["label"],
+                                                  "justification": why.strip()})
+                    overrides[c["change_id"]] = {"user": reviewer, "justification": why.strip(), "hash": rec["hash"]}
+                    st.toast(f"{c['change_id']} approved by {reviewer} · hash {rec['hash'][:10]}…", icon="✅")
+                    st.rerun()
+
 # ----------------------------------------------------------------------------- audit
 else:
     entries = AuditLog(AUDIT).entries()
@@ -368,7 +459,7 @@ else:
     if entries:
         df = pd.DataFrame(entries)
         df["hash"] = df["hash"].str[:16] + "…"
-        st.dataframe(df[["ts", "problem_id", "decision", "user", "backend", "hash"]], hide_index=True,
+        st.dataframe(df.reindex(columns=["ts", "problem_id", "change_id", "decision", "user", "backend", "hash"]), hide_index=True,
                      width="stretch", height=520)
     else:
         st.caption("No decisions yet. Approve, escalate, or reject a card on the Triage tab.")

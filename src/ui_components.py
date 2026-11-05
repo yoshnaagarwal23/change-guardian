@@ -243,6 +243,14 @@ def change_risk(changes: list[dict], has_log: bool = True) -> str:
     return "".join(rows)
 
 
+GATE_KIND = {"LOW": ("ok", "circle-check"), "MEDIUM": ("med", "triangle-exclamation"), "HIGH": ("crit", "lock")}
+
+
+def gate_badge(level: str, score: float) -> str:
+    kind, ico = GATE_KIND[level]
+    return chip(f"{level} · {score:.2f}", kind, ico)
+
+
 def banner(text: str, kind: str = "warn", icon_name: str = "triangle-exclamation") -> str:
     return f'<div class="cg-banner {kind}">{icon(icon_name)}<div>{escape(text)}</div></div>'
 

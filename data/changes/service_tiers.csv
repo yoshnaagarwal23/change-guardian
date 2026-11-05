@@ -1,0 +1,14 @@
+entity,tier,downstream_dependents
+B2B Checkout App,1,14
+PaymentService,1,18
+host-payment-prod-01,1,12
+AuthenticationService,1,16
+host-auth-prod-02,1,10
+Mobile API Gateway,1,11
+Production Web Portal,2,7
+OrderProcessingWorker,2,6
+FrontendGateway,2,8
+host-catalog-db-01,2,9
+host-frontend-05,2,5
+ProductCatalogService,3,3
+host-worker-03,3,1

@@ -1,0 +1,16 @@
+change_id,planned_time,entity,change_type,description,owner,lines_changed,has_rollback_plan,tested_in_canary
+DEMO-PEND-0001,2026-10-20 11:30,ProductCatalogService,observability,Add latency panel to the catalog dashboard,dev-mobile,31,True,True
+DEMO-PEND-0002,2026-10-21 14:00,host-worker-03,configuration,Raise batch worker log retention to 14 days,dev-mobile,15,True,True
+DEMO-PEND-0003,2026-10-20 11:30,Production Web Portal,observability,Tune alert rule wording for portal 5xx,dev-mobile,19,True,True
+DEMO-PEND-0004,2026-10-20 11:30,ProductCatalogService,code release,Release catalog search ranking tweak,dev-catalog,53,True,True
+DEMO-PEND-0005,2026-10-20 11:30,host-frontend-05,configuration,Enable gzip for static assets,dev-payments,4,True,True
+DEMO-PEND-0006,2026-10-21 14:00,OrderProcessingWorker,code release,Release order retry backoff changes,dev-catalog,259,True,False
+DEMO-PEND-0007,2026-10-20 10:00,Production Web Portal,code release,Release portal session handling refactor,dev-checkout,684,False,True
+DEMO-PEND-0008,2026-10-20 11:30,Mobile API Gateway,configuration,Adjust gateway rate limit for partner API,dev-checkout,27,True,True
+DEMO-PEND-0009,2026-10-20 10:00,host-catalog-db-01,infrastructure,Add index on catalog_items.updated_at,dev-mobile,33,True,True
+DEMO-PEND-0010,2026-10-15 14:30,FrontendGateway,code release,Upgrade TLS library in the frontend gateway,dev-catalog,193,True,False
+DEMO-PEND-0011,2026-10-20 10:00,PaymentService,infrastructure,Database schema migration for settlement ledger,dev-platform,1153,False,False
+DEMO-PEND-0012,2026-10-16 21:00,B2B Checkout App,code release,Release new checkout pricing engine,dev-identity,1437,True,False
+DEMO-PEND-0013,2026-10-21 15:00,AuthenticationService,infrastructure,Rotate signing certificate and change token TTL,dev-payments,59,False,False
+DEMO-PEND-0014,2026-10-17 02:00,host-payment-prod-01,configuration,Lower database connection pool limit,dev-payments,3,False,False
+DEMO-PEND-0015,2026-10-15 10:00,B2B Checkout App,infrastructure,Move checkout to new load balancer cluster,dev-mobile,464,False,True
