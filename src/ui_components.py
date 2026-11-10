@@ -35,8 +35,9 @@ CSS = """
 header[data-testid="stHeader"] {background: transparent;}
 .ic {display:inline-block; width:1em; height:1em; flex:none; vertical-align:-0.125em;}
 .block-container {padding-top: 1.4rem; max-width: 1480px;}
-.cg-eyebrow {font: 600 11px JetBrainsMono, monospace; letter-spacing: .14em; text-transform: uppercase;
-  color: #8B98A5; margin: 0 0 8px 0; display:flex; align-items:center; gap:8px;}
+.cg-eyebrow {font: 600 10.5px JetBrainsMono, monospace; letter-spacing: .08em; text-transform: uppercase;
+  color: #8B98A5; margin: 0 0 8px 0; display:flex; align-items:center; gap:7px; min-width:0;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .cg-card {background: rgba(17,24,33,.82); border: 1px solid #1E2A36; border-radius: 14px;
   padding: 16px 18px; backdrop-filter: blur(6px); transition: border-color .2s ease;}
 .cg-card:hover {border-color: #2B3B4C;}
@@ -50,22 +51,31 @@ header[data-testid="stHeader"] {background: transparent;}
   animation: cg-pulse 2s infinite; display:inline-block;}
 @keyframes cg-pulse {0%{box-shadow:0 0 0 0 rgba(123,216,143,.55)} 70%{box-shadow:0 0 0 8px rgba(123,216,143,0)}
   100%{box-shadow:0 0 0 0 rgba(123,216,143,0)}}
-.chip {display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:999px;
-  font: 500 12px Inter, sans-serif; border:1px solid #2B3B4C; color:#C9D4DE; background:rgba(255,255,255,.03);
-  white-space:nowrap;}
-.chip .ic {width:12px; height:12px;}
-.chip.mono {font-family: JetBrainsMono, monospace; font-size: 11.5px;}
+.chip {display:inline-flex; align-items:center; gap:5px; padding:1px 8px; border-radius:6px; line-height:18px;
+  font: 500 11px Inter, sans-serif; border:1px solid #243140; color:#AAB6C2; background:transparent;
+  white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis; vertical-align:middle;}
+.chip .ic {width:11px; height:11px;}
+.chip[title] {cursor:help;}
+.chip.mono {font-family: JetBrainsMono, monospace; font-size: 10.5px;}
+/* Only "crit" is filled: strong color is reserved for what needs attention. */
 .chip.crit {color:#FF8A87; border-color:rgba(242,95,92,.45); background:rgba(242,95,92,.10);}
-.chip.high {color:#FFC65C; border-color:rgba(255,178,36,.45); background:rgba(255,178,36,.10);}
-.chip.med  {color:#FFDD8A; border-color:rgba(255,209,102,.35); background:rgba(255,209,102,.08);}
-.chip.low  {color:#8CC4F0; border-color:rgba(90,169,230,.40); background:rgba(90,169,230,.08);}
-.chip.ok   {color:#9BE4AA; border-color:rgba(123,216,143,.40); background:rgba(123,216,143,.08);}
+.chip.high {color:#F2BE63; border-color:rgba(255,178,36,.30);}
+.chip.med  {color:#D9C68E; border-color:rgba(255,209,102,.22);}
+.chip.low  {color:#9FB4C6;}
+.chip.ok   {color:#8FCF9C; border-color:rgba(123,216,143,.22);}
 .chip.muted{color:#8B98A5;}
 .cg-id {font: 600 1.45rem JetBrainsMono, monospace; letter-spacing:-.01em; margin:0;}
-.cg-chips {display:flex; gap:6px; flex-wrap:wrap; margin: 8px 0 4px 0;}
-.cg-banner {display:flex; gap:10px; align-items:flex-start; padding:10px 14px; border-radius:10px;
-  font-size:.9rem; margin: 6px 0;}
-.cg-banner .ic {width:15px; height:15px; margin-top:2px;}
+.cg-chips {display:flex; gap:6px; flex-wrap:wrap; margin: 6px 0 4px 0;}
+.cg-banner {display:flex; gap:9px; align-items:flex-start; padding:7px 12px; border-radius:8px;
+  font-size:.84rem; line-height:1.4; margin: 4px 0;}
+.cg-banner .ic {width:13px; height:13px; margin-top:3px;}
+.cg-note {display:flex; gap:6px; align-items:center; font-size:.78rem; color:#8B98A5; margin:2px 0 8px 0;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.cg-note .ic {width:12px; height:12px; flex:none;}
+.cg-note[title] {cursor:help;}
+.cg-notes {display:flex; flex-wrap:wrap; gap:4px 20px; margin:0 0 6px 0;}
+.cg-notes .cg-note {margin:0;}
+.cg-text {font-size:.92rem; line-height:1.5; color:#E6EDF3; margin:0 0 10px 0;}
 .cg-banner.crit {background:rgba(242,95,92,.08); border:1px solid rgba(242,95,92,.35); color:#FFB3B1;}
 .cg-banner.warn {background:rgba(255,178,36,.07); border:1px solid rgba(255,178,36,.30); color:#FFD48A;}
 .tl {position:relative; margin: 4px 0 0 6px; padding-left: 22px; border-left: 1px dashed #2B3B4C;}
@@ -76,37 +86,54 @@ header[data-testid="stHeader"] {background: transparent;}
 .tl-item.cause .tl-node {border-color:#FFB224; color:#FFB224; box-shadow:0 0 12px rgba(255,178,36,.35);}
 .tl-item.symptom .tl-node {color:#8B98A5;}
 .tl-item.gap .tl-node {color:#5AA9E6; border-style:dashed;}
-.tl-head {display:flex; flex-wrap:wrap; gap:6px; align-items:center; font-size:.76rem; color:#8B98A5;
-  font-family: JetBrainsMono, monospace; white-space:nowrap; margin-top:2px;}
+.tl-head {display:flex; flex-wrap:nowrap; gap:6px; align-items:center; font-size:.72rem; color:#8B98A5;
+  font-family: JetBrainsMono, monospace; white-space:nowrap; margin-top:2px; min-width:0; overflow:hidden;}
+.tl-head .ent {overflow:hidden; text-overflow:ellipsis; min-width:0;}
 .tl-label {font: 600 .68rem JetBrainsMono, monospace; letter-spacing:.1em; text-transform:uppercase;
   color:#8B98A5;}
 .cg-guard {list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;}
 .cg-guard li {display:flex; gap:8px; align-items:flex-start; font-size:.84rem; color:#AAB6C2; line-height:1.35;}
 .cg-guard .ic {color:#7BD88F; width:13px; height:13px; margin-top:3px;}
 .tl-item.cause .tl-label {color:#FFB224;} .tl-item.gap .tl-label {color:#5AA9E6;}
-.tl-text {margin-top:3px; font-size:.95rem; color:#E6EDF3;}
+.tl-text {margin-top:3px; font-size:.9rem; line-height:1.4; color:#E6EDF3;}
 .tl-item.symptom .tl-text, .tl-item.gap .tl-text {color:#AAB6C2;}
 .rb {display:flex; flex-direction:column; gap:8px;}
-.rb-step {display:grid; grid-template-columns: 28px 1fr auto; gap:12px; align-items:start;
-  padding:10px 12px; border:1px solid #1E2A36; border-radius:10px; background:rgba(255,255,255,.015);}
+.rb-step {display:grid; grid-template-columns: 26px 1fr auto; gap:10px; align-items:start;
+  padding:8px 10px; border:1px solid #1E2A36; border-radius:10px; background:rgba(255,255,255,.015);}
 .rb-step.locked {border-color: rgba(255,178,36,.28);}
 .rb-num {font: 600 12px JetBrainsMono, monospace; color:#8B98A5; width:24px; height:24px; border-radius:7px;
   display:flex; align-items:center; justify-content:center; border:1px solid #2B3B4C;}
-.rb-text {font-size:.92rem; line-height:1.4;}
-.rb-tags {display:flex; flex-direction:column; gap:4px; align-items:flex-end;}
-.pc {display:grid; grid-template-columns: 1fr; gap:6px; padding:10px 0; border-bottom:1px solid #1A2430;}
+.rb-text {font-size:.9rem; line-height:1.4;}
+.rb-tags {display:flex; gap:4px; align-items:center; padding-top:1px;}
+.pc {display:grid; grid-template-columns: minmax(0, 1fr); gap:5px; padding:9px 0; border-bottom:1px solid #1A2430;}
 .pc:last-child {border-bottom:none;}
-.pc-id {font: 600 12.5px JetBrainsMono, monospace; color:#C9D4DE;}
-.pc-cause {grid-column: 1 / -1; font-size:.9rem;}
-.pc-fix {grid-column: 1 / -1; font-size:.85rem; color:#8B98A5;}
+.pc-id {font: 600 11.5px JetBrainsMono, monospace; color:#C9D4DE; white-space:nowrap; overflow:hidden;
+  text-overflow:ellipsis;}
+.pc-cause {grid-column: 1 / -1; font-size:.88rem; line-height:1.4; display:-webkit-box; -webkit-line-clamp:3;
+  -webkit-box-orient:vertical; overflow:hidden;}
+.pc-fix {grid-column: 1 / -1; font-size:.8rem; line-height:1.4; color:#8B98A5; display:-webkit-box;
+  -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;}
+.pc details summary {font-size:.78rem; color:#8B98A5; cursor:pointer; list-style:none;}
+.pc details summary::before {content:"▸ "; font-size:.7rem;}
+.pc details[open] summary::before {content:"▾ ";}
+.pc details ul {margin:4px 0 0 0; padding-left:16px; font-size:.8rem; color:#8B98A5;}
 .meter {height:6px; border-radius:99px; background:#1A2430; overflow:hidden; margin-top:6px;}
 .meter > span {display:block; height:100%; border-radius:99px;
   background: linear-gradient(90deg, #FFB224, #7BD88F);}
-.kv {display:grid; grid-template-columns: auto 1fr; gap:6px 14px; font-size:.86rem;}
+.kv {display:grid; grid-template-columns: auto 1fr; gap:4px 14px; font-size:.8rem;}
 .kv dt {color:#8B98A5;} .kv dd {margin:0; font-family: JetBrainsMono, monospace; text-align:right;}
 div[data-testid="stDataFrame"] {border-radius: 12px; overflow: hidden;}
 .stTabs [data-baseweb="tab-list"] {gap: 4px;}
 footer {visibility: hidden;}
+/* Narrow widths: let column rows wrap instead of squeezing cards to one word per line. */
+@media (max-width: 1180px) {
+  [data-testid="stMain"] [data-testid="stHorizontalBlock"] {flex-wrap: wrap;}
+  [data-testid="stMain"] [data-testid="stColumn"] {min-width: 220px;}
+  .st-key-cg-actions [data-testid="stColumn"] {min-width: 0;}
+  [data-testid="stMain"] [data-testid="stColumn"]:has([data-testid="stPlotlyChart"]) {min-width: 100%;}
+}
+[data-testid="stMetric"], [data-testid="stCaptionContainer"] {white-space: normal;}
+.stExpander summary p {white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 </style>
 """
 
@@ -125,9 +152,11 @@ def icon(name: str) -> str:
             f'mask:url({url}) center/contain no-repeat;background-color:currentColor"></i>')
 
 
-def chip(text: str, kind: str = "", icon_name: str | None = None, mono: bool = False) -> str:
+def chip(text: str, kind: str = "", icon_name: str | None = None, mono: bool = False,
+         title: str | None = None) -> str:
     ico = icon(icon_name) if icon_name else ""
-    return f'<span class="chip {kind}{" mono" if mono else ""}">{ico}{escape(str(text))}</span>'
+    tip = f' title="{escape(title)}"' if title else ""
+    return f'<span class="chip {kind}{" mono" if mono else ""}"{tip}>{ico}{escape(str(text))}</span>'
 
 
 def eyebrow(text: str, icon_name: str | None = None) -> str:
@@ -152,19 +181,21 @@ def hero(engine: str, chain_ok: bool, alerts: int, pages: int) -> str:
 
 
 def trust_badge(trust: float, n: int) -> str:
+    """Short on the card; the full label and sample size live in the tooltip."""
     label, kind = badge(trust)
-    return chip(f"{label} · Trust {trust:.0%} (n={n})", kind, "gauge-high")
+    short = label.split(" ")[0].lower()
+    return chip(f"{short} {trust:.0%}", kind, "gauge-high", title=f"{label} · Trust {trust:.0%} (n={n})")
 
 
 def _tl_item(kind: str, label: str, icon_name: str, alert: dict, trust: dict | None = None) -> str:
     t = (trust or {}).get(alert["root_cause"])
-    badge_html = f'<div style="margin-top:5px">{trust_badge(*t)}</div>' if t else ""
+    badge_html = f'<div style="margin-top:4px">{trust_badge(*t)}</div>' if t else ""
     return f"""
 <div class="tl-item {kind}">
   <div class="tl-node">{icon(icon_name)}</div>
   <div class="tl-label">{label}</div>
   <div class="tl-head"><span>{escape(str(alert["timestamp"]))[11:16]}</span><span>·</span>
-    <span>{escape(alert["entity_name"])}</span><span>·</span>
+    <span class="ent" title="{escape(alert["entity_name"])}">{escape(alert["entity_name"])}</span><span>·</span>
     <span style="color:{SEV_COLOR.get(alert["severity"], MUTED)}">{escape(alert["severity"])}</span></div>
   <div class="tl-text">{escape(alert["root_cause"])}</div>{badge_html}
 </div>"""
@@ -187,12 +218,17 @@ def runbook(step_plan: list[dict]) -> str:
     rows = []
     for i, s in enumerate(step_plan, 1):
         ico, label, kind = RISK[s["risk"]]
-        gate = chip("needs approval", "high", "lock") if s["needs_approval"] else chip("read-only", "muted")
+        # One badge per step: the gate, colored by risk; the risk type is in the tooltip.
+        if s["needs_approval"]:
+            gate = chip("needs approval", "crit" if s["risk"] == "security" else "high", "lock",
+                        title=f"{label} step · a human must approve it")
+        else:
+            gate = chip("read-only" if s["risk"] == "diagnostic" else label, "muted", ico, title=f"{label} step")
         rows.append(f"""
 <div class="rb-step{' locked' if s['needs_approval'] else ''}">
   <div class="rb-num">{i:02d}</div>
   <div class="rb-text">{escape(s["step"])}</div>
-  <div class="rb-tags">{chip(label, kind, ico)}{gate}</div>
+  <div class="rb-tags">{gate}</div>
 </div>""")
     return f'<div class="rb">{"".join(rows)}</div>'
 
@@ -209,13 +245,13 @@ def precedents(items: list[dict]) -> str:
   <div class="pc-id">{escape(p["incident_id"])} <span style="color:#8B98A5">· seen {p["precedent_count"]}x ·
     {escape(p.get("status", ""))}</span></div>
   <div>{tag}</div>
-  <div class="pc-cause">{escape(p["root_cause"])}</div>
-  <div class="pc-fix">Remediation: {escape(p["remediation"])}</div>
+  <div class="pc-cause" title="{escape(p["root_cause"])}">{escape(p["root_cause"])}</div>
+  <div class="pc-fix" title="{escape(p["remediation"])}">Remediation: {escape(p["remediation"])}</div>
 </div>""")
     return "".join(rows)
 
 
-LEVEL_KIND = {"high": "crit", "medium": "high", "low": "muted"}
+LEVEL_KIND = {"high": "crit", "medium": "med", "low": "muted"}
 
 
 def change_risk(changes: list[dict], has_log: bool = True) -> str:
@@ -228,27 +264,42 @@ def change_risk(changes: list[dict], has_log: bool = True) -> str:
     rows = []
     for c in changes:
         lvl = c.get("risk_level", "low")
-        tag = chip(f"{lvl} risk · {c.get('risk_score', 0):.2f}", LEVEL_KIND.get(lvl, "muted"), "bolt")
+        tag = chip(f"{lvl} risk · {c.get('risk_score', 0):.2f}", LEVEL_KIND.get(lvl, "muted"), "bolt",
+                   title="recency × (0.25 + 0.75 × fit) · high ≥ 0.55 · medium ≥ 0.30")
         mins = c.get("minutes_before")
         when = f"{mins:.0f} min before" if mins is not None and mins >= 0 else "after the problem started"
         reasons = "".join(f"<li>{escape(r)}</li>" for r in c.get("reasons", []))
         rows.append(f"""
 <div class="pc">
-  <div class="pc-id">{escape(str(c.get("change_id", "")))} <span style="color:#8B98A5">·
+  <div class="pc-id">{tag} {escape(str(c.get("change_id", "")))} <span style="color:#8B98A5">·
     {escape(str(c.get("entity", "")))} · {escape(when)} · {escape(c.get("kind", ""))}</span></div>
-  <div>{tag}</div>
   <div class="pc-cause">{escape(str(c.get("description", "")))}</div>
-  <ul class="pc-fix" style="margin:0;padding-left:18px">{reasons}</ul>
+  <details><summary>Why this score</summary><ul>{reasons}</ul></details>
 </div>""")
     return "".join(rows)
 
 
-GATE_KIND = {"LOW": ("ok", "circle-check"), "MEDIUM": ("med", "triangle-exclamation"), "HIGH": ("crit", "lock")}
+GATE_KIND = {"LOW": ("muted", "circle-check"), "MEDIUM": ("med", "triangle-exclamation"), "HIGH": ("crit", "lock")}
 
 
 def gate_badge(level: str, score: float) -> str:
     kind, ico = GATE_KIND[level]
     return chip(f"{level} · {score:.2f}", kind, ico)
+
+
+def note(text: str, tooltip: str | None = None, icon_name: str = "circle-check") -> str:
+    """One quiet line; the longer explanation goes in the hover tooltip."""
+    tip = f' title="{escape(tooltip)}"' if tooltip else ""
+    return f'<div class="cg-note"{tip}>{icon(icon_name)}<span>{escape(text)}</span></div>'
+
+
+def notes(*items: str) -> str:
+    """Several note() lines on one row."""
+    return f'<div class="cg-notes">{"".join(items)}</div>'
+
+
+def para(body: str) -> str:
+    return f'<p class="cg-text">{escape(body)}</p>'
 
 
 def banner(text: str, kind: str = "warn", icon_name: str = "triangle-exclamation") -> str:

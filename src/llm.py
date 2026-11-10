@@ -18,12 +18,19 @@ from dataclasses import dataclass
 from schema import ModelAnswer
 
 DEFAULT_HF_MODEL = os.getenv("CG_HF_MODEL", "Qwen/Qwen2.5-0.5B-Instruct")
-DEFAULT_ANTHROPIC_MODEL = os.getenv("CG_ANTHROPIC_MODEL", "claude-opus-5-5")
+# Claude Sonnet 5: the default Claude engine. List prices, USD per 1M tokens (thinking bills as output).
+SONNET_5_MODEL = "claude-sonnet-5"
+SONNET_5_INPUT_USD_PER_MTOK = 2.00
+SONNET_5_OUTPUT_USD_PER_MTOK = 10.00
 
-# USD per 1M tokens (input, output), for the cost KPI. Local models cost 0 per token.
+DEFAULT_ANTHROPIC_MODEL = os.getenv("CG_ANTHROPIC_MODEL", SONNET_5_MODEL)
+
+# USD per 1M tokens (input, output), for the card, the session total and the cost KPI.
+# Local models cost 0 per token.
 PRICES = {
     "claude-opus-5-5": (4.00, 20.00),
     "claude-sonnet-5-5": (2.00, 10.00),
+    SONNET_5_MODEL: (SONNET_5_INPUT_USD_PER_MTOK, SONNET_5_OUTPUT_USD_PER_MTOK),
     "claude-haiku-5-5": (0.10, 0.50),
 }
 
@@ -129,8 +136,12 @@ class HFBackend:
                           int(inputs["input_ids"].shape[1]), int(len(new)))
 
 
+# Models that accept the server-side refusal fallback (`fallbacks: "default"`); others get a plain request.
+FALLBACK_MODELS = {"claude-fable-5-1", "claude-opus-5-5", "claude-opus-5", "claude-sonnet-5-5"}
+
+
 class AnthropicBackend:
-    """Claude via the official SDK. Thinking is always on for Opus 5.5; effort keeps it cheap."""
+    """Claude via the official SDK (default: Claude Sonnet 5). Adaptive thinking; low effort keeps it cheap."""
 
     def __init__(self, model: str = DEFAULT_ANTHROPIC_MODEL, effort: str = "low"):
         import anthropic
@@ -142,14 +153,15 @@ class AnthropicBackend:
 
     def generate(self, messages: list[dict]) -> Generation:
         system = messages[0]["content"]
+        fallback = ({"betas": ["server-side-fallback-2026-07-01"], "fallbacks": "default"}
+                    if self.model in FALLBACK_MODELS else {})
         response = self.client.beta.messages.create(
             model=self.model,
             max_tokens=4000,
             system=system,
             messages=messages[1:],
             output_config={"effort": self.effort},
-            betas=["server-side-fallback-2026-07-01"],
-            fallbacks="default",
+            **fallback,
         )
         if response.stop_reason == "refusal":
             return Generation("", response.usage.input_tokens, response.usage.output_tokens)
@@ -172,3 +184,19 @@ def token_cost_usd(backend_name: str, tokens_in: int, tokens_out: int) -> float:
     model = backend_name.split(":", 1)[-1]
     price_in, price_out = PRICES.get(model, (0.0, 0.0))
     return (tokens_in * price_in + tokens_out * price_out) / 1_000_000
+
+
+def cost_label(backend_name: str, tokens_in: int, tokens_out: int) -> str:
+    """Per-call cost for the card: "$0.00" for rules / local models, "price unknown" for an unpriced model."""
+    if not backend_name.startswith("anthropic:"):
+        return "$0.00"
+    if backend_name.split(":", 1)[-1] not in PRICES:
+        return "price unknown"
+    return usd(token_cost_usd(backend_name, tokens_in, tokens_out))
+
+
+def usd(amount: float) -> str:
+    """Small amounts keep 4 decimals so a single call never reads as $0.00."""
+    if amount == 0:
+        return "$0.00"
+    return f"${amount:.4f}" if amount < 0.01 else f"${amount:.3f}" if amount < 1 else f"${amount:.2f}"
