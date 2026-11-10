@@ -26,7 +26,7 @@ from agent import TriageAgent  # noqa: E402
 from alert_trust import ACTION, NO_ACTION, badge, disposition, load_history, trust_lookup, trust_table  # noqa: E402
 from guardrails import AuditLog  # noqa: E402
 from kpis import compute_kpis  # noqa: E402
-from llm import get_backend  # noqa: E402
+from llm import Generation, cost_label, get_backend, token_cost_usd, usd  # noqa: E402
 from notify import send_risk_alert  # noqa: E402
 from predeploy_risk import label_culprits, llm_summary, load_inputs, score_all  # noqa: E402
 from tools import CHANGES, TriageTools  # noqa: E402
@@ -59,6 +59,18 @@ def load_backend(mode: str):
     if mode == "Claude API":
         return get_backend("anthropic")
     return None
+
+
+class MeteredBackend:
+    """Wraps an engine so every model call (triage or summary) adds to the session total in the sidebar."""
+
+    def __init__(self, inner, on_call):
+        self.inner, self.name, self.on_call = inner, inner.name, on_call
+
+    def generate(self, messages: list[dict]) -> Generation:
+        gen = self.inner.generate(messages)
+        self.on_call(gen)
+        return gen
 
 
 # Engines that need optional packages. Missing ones are listed as "not configured" instead of offered.
@@ -137,6 +149,27 @@ with st.sidebar:
             st.html(ui.banner(f"{mode} failed to load, using Rules only.", "warn"))
             st.html(ui.note("Why it failed", failed[mode], "magnifying-glass"))
             mode = "Rules only"
+
+    usage = st.session_state.setdefault("llm_usage", {"calls": 0, "tokens_in": 0, "tokens_out": 0, "usd": 0.0})
+    usage_slot = st.empty()
+
+    def show_usage() -> None:
+        n = usage["calls"]
+        usage_slot.html(ui.note(f"Session: {n} call{'s' if n != 1 else ''} · {usd(usage['usd'])}",
+                                f"{usage['tokens_in']:,} tokens in · {usage['tokens_out']:,} tokens out · "
+                                "model calls this browser session (triage + summaries), at list prices",
+                                "gauge-high"))
+
+    def record_call(gen: Generation) -> None:
+        usage["calls"] += 1
+        usage["tokens_in"] += gen.tokens_in
+        usage["tokens_out"] += gen.tokens_out
+        usage["usd"] += token_cost_usd(backend.name, gen.tokens_in, gen.tokens_out)
+        show_usage()
+
+    show_usage()
+    if backend is not None:
+        backend = MeteredBackend(backend, record_call)
     st.caption({"Rules only": "Deterministic: correlation, routing, SOP branch, precedents. $0, ~10 ms.",
                 "Local model + LoRA": "Qwen2.5-0.5B + our LoRA adapter, on this laptop. $0, ~1 s.",
                 "Local model (base)": "Untuned Qwen2.5-0.5B, for comparison.",
@@ -255,8 +288,7 @@ if tab == "Triage":
             st.html(ui.eyebrow("Confidence", "gauge-high") + ui.meter(card["confidence"]))
             st.html(ui.kv([("confidence", f"{card['confidence']:.2f}"),
                            ("tokens in/out", f"{card['tokens_in']}/{card['tokens_out']}"),
-                           ("cost", "$0.00" if not card["tokens_in"] or card["backend"].startswith("hf")
-                            else "see KPIs")]))
+                           ("est. cost", cost_label(card["backend"], card["tokens_in"], card["tokens_out"]))]))
 
         with st.container(border=True):
             locked = sum(s["needs_approval"] for s in card["step_plan"])
